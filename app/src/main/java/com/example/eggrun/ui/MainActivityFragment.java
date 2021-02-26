@@ -2,48 +2,51 @@ package com.example.eggrun.ui;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class MainActivityFragment extends Fragment {
-    private static final int ANDROID_TIMEOUT_BASE = 500;
-    private static final int ANDROID_TIMEOUT_SEED = 2000;
+import com.example.eggrun.R;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d(null, "onCreate()");
+public class MainActivityFragment extends Fragment {
+    private static final String TAG = "MainActivityFragment";
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate()");
+
+        return inflater.inflate(R.layout.fragment_main_activity, container, false);
     }
 
     @Override
     public void onStart(){
         super.onStart();
-        Log.d(null, "onStart()");
+        Log.d(TAG, "onStart()");
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        Log.d(null, "onResume()");
+        Log.d(TAG, "onResume()");
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        Log.d(null, "onPause()");
+        Log.d(TAG, "onPause()");
     }
 
     @Override
     public void onStop(){
         super.onStop();
-        Log.d(null, "onStop()");
+        Log.d(TAG, "onStop()");
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        Log.d(null, "onDestroy()");
+        Log.d(TAG, "onDestroy()");
     }
 }
