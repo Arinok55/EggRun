@@ -49,7 +49,7 @@ public class Egg {
         return legendary;
     }
 
-    public void RunSessionAdd(RunSession runSession){
+    public void addRunSession(RunSession runSession){
         RunSessionList.add(runSession);
     }
 
