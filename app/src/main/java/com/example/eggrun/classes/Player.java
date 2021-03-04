@@ -1,4 +1,7 @@
-package com.example.eggrun;
+package com.example.eggrun.classes;
+
+import com.example.eggrun.classes.pet.CommonPet;
+import com.example.eggrun.classes.egg.Egg;
 
 import java.util.List;
 
@@ -6,7 +9,7 @@ public class Player {
     private static Player player = null;
     private String name = null;
     private List<Egg> eggList = null;
-    private List<Pet> petList = null;
+    private List<CommonPet> petList = null;
 
     private Player(){/* Singleton design */}
 
@@ -29,11 +32,11 @@ public class Player {
         return false;
     }
 
-    public boolean addPet(Pet pet){
+    public boolean addPet(CommonPet pet){
         return petList.add((pet));
     }
 
-    public boolean removeEgg(Pet pet){
+    public boolean removeEgg(CommonPet pet){
         if (petList.contains(pet)){
             return petList.remove(pet);
         }
