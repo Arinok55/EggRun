@@ -9,14 +9,14 @@ import java.util.List;
 
 public class UncommonEgg implements Egg {
     private List<RunSession> RunSessionList = null;
-    private double distanceToHatch = 3;
+    private double mDistanceToHatch = 3;
 
     @Override
     public void addRunSession(RunSession runSession){
         RunSessionList.add(runSession);
-        distanceToHatch -= runSession.getDistance();
-        if (distanceToHatch < 0){
-            distanceToHatch = 0;
+        mDistanceToHatch -= runSession.getDistance();
+        if (mDistanceToHatch < 0){
+            mDistanceToHatch = 0;
         }
     }
 
@@ -24,7 +24,7 @@ public class UncommonEgg implements Egg {
     public List<RunSession> getRunSessionList(){ return RunSessionList; }
 
     @Override
-    public double getDistanceToHatch(){ return distanceToHatch; }
+    public double DistanceToHatch(){ return mDistanceToHatch; }
 
     @Override
     @NonNull
