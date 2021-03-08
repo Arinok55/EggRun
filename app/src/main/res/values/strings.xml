@@ -3,4 +3,8 @@
     <string name="splash_screen">Splash Screen</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="hatch_new_egg_button">Hatch New Egg</string>
+    <string name="current_egg_button">Current Eggs</string>
+    <string name="pets_button">Pets</string>
+    <string name="options_button">Options</string>
 </resources>
