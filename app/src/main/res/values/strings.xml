@@ -7,4 +7,8 @@
     <string name="current_egg_button">Current Eggs</string>
     <string name="pets_button">Pets</string>
     <string name="options_button">Options</string>
+    <string name="common_button">Common Egg\n1 Mile</string>
+    <string name="uncommon_button">Uncommon Egg\n3 Miles</string>
+    <string name="rare_button">Rare Egg\n5 Miles</string>
+    <string name="legendary_button">Legendary Egg\n10 Miles</string>
 </resources>
