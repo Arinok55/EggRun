@@ -3,17 +3,17 @@ package com.example.eggrun.classes.egg;
 import androidx.annotation.NonNull;
 
 import com.example.eggrun.classes.RunSession;
-import com.example.eggrun.classes.egg.Egg;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class UncommonEgg implements Egg {
-    private List<RunSession> RunSessionList = null;
+public class UncommonEgg implements Egg, Serializable {
+    private List<RunSession> mRunSessionList;
     private double mDistanceToHatch = 3;
 
     @Override
     public void addRunSession(RunSession runSession){
-        RunSessionList.add(runSession);
+        mRunSessionList.add(runSession);
         mDistanceToHatch -= runSession.getDistance();
         if (mDistanceToHatch < 0){
             mDistanceToHatch = 0;
@@ -21,13 +21,19 @@ public class UncommonEgg implements Egg {
     }
 
     @Override
-    public List<RunSession> getRunSessionList(){ return RunSessionList; }
+    public List<RunSession> getRunSessionList(){
+        return mRunSessionList;
+    }
 
     @Override
-    public double DistanceToHatch(){ return mDistanceToHatch; }
+    public double DistanceToHatch(){
+        return mDistanceToHatch;
+    }
 
     @Override
     @NonNull
-    public String toString(){ return "UNCOMMON"; }
+    public String toString(){
+        return "UNCOMMON";
+    }
 }
 

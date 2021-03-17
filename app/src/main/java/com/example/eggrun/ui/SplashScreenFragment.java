@@ -7,15 +7,14 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.eggrun.R;
 
-public class SplashScreenFragment extends Fragment implements View.OnTouchListener {
+public class SplashScreenFragment extends Fragment {
     private boolean mIsActive = true;
-    private final int mSplashTime = 5000;
+    private final int mSplashTime = 1000;
     private final int mTimeIncrement = 100;
     private final int mSleepTime = 100;
 
@@ -23,9 +22,7 @@ public class SplashScreenFragment extends Fragment implements View.OnTouchListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_splash_screen, container, false);
-        v.setOnTouchListener(this);
-        return v;
+        return inflater.inflate(R.layout.fragment_splash_screen, container, false);
     }
 
     @Override
@@ -37,7 +34,7 @@ public class SplashScreenFragment extends Fragment implements View.OnTouchListen
             public void run() {
                 try {
                     int elapsedTime = 0;
-                    while (mIsActive && (elapsedTime < mSplashTime)) {
+                    while (elapsedTime < mSplashTime) {
                         sleep(mSleepTime);
                         if (mIsActive) elapsedTime = elapsedTime + mTimeIncrement;
                     }
@@ -51,14 +48,5 @@ public class SplashScreenFragment extends Fragment implements View.OnTouchListen
             }
         };
         splashThread.start();
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN){
-            mIsActive = false;
-            v.performClick();
-        }
-        return false;
     }
 }

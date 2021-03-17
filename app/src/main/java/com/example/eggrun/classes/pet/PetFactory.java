@@ -1,33 +1,27 @@
 package com.example.eggrun.classes.pet;
 
-import com.example.eggrun.classes.RunSession;
-
-import java.util.List;
+import com.example.eggrun.classes.egg.Egg;
 
 public class PetFactory {
     Pet pet = null;
 
-    public Pet createPet(String petType, List<RunSession> runSessionList){
+    public Pet createPet(Egg egg){
+        String petType = egg.toString();
         if (petType == null){
             return null;
         }
         else if (petType.equalsIgnoreCase("COMMON")){
-            pet = new CommonPet();
+            pet = new CommonPet(egg);
         }
         else if (petType.equalsIgnoreCase("UNCOMMON")){
-            pet = new UncommonPet();
+            pet = new UncommonPet(egg);
         }
         else if (petType.equalsIgnoreCase("RARE")){
-            pet = new RarePet();
+            pet = new RarePet(egg);
         }
         else if (petType.equalsIgnoreCase("LEGENDARY")){
-            pet = new LegendaryPet();
+            pet = new LegendaryPet(egg);
         }
-        else {
-            return null;
-        }
-
-        pet.setRunSessionList(runSessionList);
-        return pet;
+        return null;
     }
 }

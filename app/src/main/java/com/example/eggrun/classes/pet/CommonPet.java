@@ -3,25 +3,26 @@ package com.example.eggrun.classes.pet;
 import android.media.Image;
 
 import com.example.eggrun.classes.RunSession;
+import com.example.eggrun.classes.egg.Egg;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class CommonPet implements Pet {
-    private static Image PetImage = null;
-    private List<RunSession> RunSessionList = null;
+public class CommonPet implements Pet, Serializable {
+    private Image mPetImage;
+    private List<RunSession> mRunSessionList;
 
-    @Override
-    public void setRunSessionList(List<RunSession> runSessionList){
-        RunSessionList = runSessionList;
+    public CommonPet(Egg egg){
+        mRunSessionList = egg.getRunSessionList();
     }
 
     @Override
     public List<RunSession> getRunSessionList(){
-        return RunSessionList;
+        return mRunSessionList;
     }
 
     @Override
-    public Image getImage(){
-        return PetImage;
+    public Image getImage() {
+        return mPetImage;
     }
 }

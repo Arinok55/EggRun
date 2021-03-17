@@ -1,53 +1,49 @@
 package com.example.eggrun.classes;
 
-import com.example.eggrun.classes.pet.CommonPet;
 import com.example.eggrun.classes.egg.Egg;
+import com.example.eggrun.classes.pet.Pet;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Player {
-    private static Player player = null;
-    private String name = null;
-    private List<Egg> eggList = null;
-    private List<CommonPet> petList = null;
+public class Player implements Serializable {
+    private String mName;
+    private String mPassword;
+    private String mFileName;
 
-    private Player(){/* Singleton design */}
+    private List<Egg> mEggList;
+    private List<Pet> mPetList;
 
-    public static Player createPlayer(String name){
-        if (player == null){
-            player = new Player();
-            player.name = name;
-        }
-        return player;
-    }
-
-    public boolean addEgg(Egg egg){
-        return eggList.add(egg);
-    }
-
-    public boolean removeEgg(Egg egg){
-        if (eggList.contains(egg)){
-            return eggList.remove(egg);
-        }
-        return false;
-    }
-
-    public boolean addPet(CommonPet pet){
-        return petList.add((pet));
-    }
-
-    public boolean removeEgg(CommonPet pet){
-        if (petList.contains(pet)){
-            return petList.remove(pet);
-        }
-        return false;
+    public Player(String name, String password){
+        mName = name;
+        mPassword = password;
     }
 
     public String getName(){
-        return name;
+        return mName;
     }
 
-    public void setName(String name){
-        player.name = name;
+    public String getPassword(){
+        return mPassword;
     }
+
+    public List<Egg> getEggList(){
+        return mEggList;
+    }
+
+    public void addEgg(Egg egg){
+        mEggList.add(egg);
+    }
+
+    public List<Pet> getPetList(){
+        return mPetList;
+    }
+
+    public void addPet(Pet pet){
+        mPetList.add(pet);
+    }
+
+    public void setFileName(String fileName){ mFileName = fileName; }
+
+    public String getFileName() { return mFileName; }
 }
