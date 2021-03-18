@@ -1,10 +1,6 @@
 package com.example.eggrun.ui;
 
-import android.preference.PreferenceManager;
-
 import androidx.fragment.app.Fragment;
-
-import com.example.eggrun.R;
 
 import java.io.File;
 

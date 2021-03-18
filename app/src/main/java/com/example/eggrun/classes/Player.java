@@ -4,7 +4,7 @@ import com.example.eggrun.classes.egg.Egg;
 import com.example.eggrun.classes.pet.Pet;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.ArrayList;
 
 public class Player implements Serializable {
     private String mName;
@@ -12,12 +12,14 @@ public class Player implements Serializable {
     private String mFileName;
     private boolean mPrimaryProfile = true;
 
-    private List<Egg> mEggList;
-    private List<Pet> mPetList;
+    private ArrayList<Egg> mEggList;
+    private ArrayList<Pet> mPetList;
 
     public Player(String name, String password){
         mName = name;
         mPassword = password;
+        mEggList = new ArrayList<>();
+        mPetList = new ArrayList<>();
     }
 
     public String getName(){
@@ -28,7 +30,7 @@ public class Player implements Serializable {
         return mPassword;
     }
 
-    public List<Egg> getEggList(){
+    public ArrayList<Egg> getEggList(){
         return mEggList;
     }
 
@@ -36,7 +38,7 @@ public class Player implements Serializable {
         mEggList.add(egg);
     }
 
-    public List<Pet> getPetList(){
+    public ArrayList<Pet> getPetList(){
         return mPetList;
     }
 
