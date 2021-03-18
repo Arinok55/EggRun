@@ -2,6 +2,7 @@ package com.example.eggrun.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,15 +27,15 @@ import java.io.ObjectOutputStream;
 
 public class NewAccountFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "NewAccountFragment";
-    Activity activity;
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
     private EditText mConfirmEditText;
 
     private File mGameDirectory;
-    private String mGameDirectoryFileName = "EggRunDirectory";
-    private File mPlayerDirectory;
-    private String mPlayerDirectoryFileName = "PlayerDirectory";
+
+    public NewAccountFragment(File directory){
+        mGameDirectory = directory;
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreate()");
@@ -58,7 +59,7 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
         if (viewId == R.id.create_account_button) {
             createAccount();
         } else if(viewId == R.id.cancel_button){
-            activity = getActivity();
+            Activity activity = getActivity();
             activity.finish();
         }
         else{
@@ -76,7 +77,6 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
             Player player = new Player(username, password);
             if (insertPlayer(player)) {
                 Toast.makeText(activity.getApplicationContext(), "New record inserted", Toast.LENGTH_SHORT).show();
-                activity = getActivity();
                 activity.finish();
             }
             else{
@@ -95,35 +95,44 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
     }
 
     private boolean insertPlayer(Player newPlayer){
-        Context context = getContext().getApplicationContext();
-        mGameDirectory = new File(context.getFilesDir() ,mGameDirectoryFileName);
-
         ObjectInputStream input;
         ObjectOutputStream output;
 
-        File GameFiles[] = mGameDirectory.listFiles();
-        for (int i = 0; i < GameFiles.length; i++){
-            if (GameFiles[i].isFile()){
-                try{
-                    input = new ObjectInputStream(new FileInputStream(GameFiles[i]));
+        File[] GameFiles = mGameDirectory.listFiles();
+        for (File gameFile : GameFiles) {
+            if (gameFile.isFile()) {
+                try {
+                    input = new ObjectInputStream(new FileInputStream(gameFile));
                     Player player = (Player) input.readObject();
 
-                    if (player.getName().equals(newPlayer.getName())){
+                    if (player.getName().equals(newPlayer.getName())) {
                         return false;
                     }
                     input.close();
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
                 }
-                catch(IOException | ClassNotFoundException e){e.printStackTrace();}
             }
         }
         try{
+            makePrimaryAccount(newPlayer.getName());
             output = new ObjectOutputStream(new FileOutputStream(new File(mGameDirectory, newPlayer.getName())));
             output.writeObject(newPlayer);
             Log.d(TAG, "Writing player object");
             output.close();
-        }
-        catch(FileNotFoundException e){e.printStackTrace();}
-        catch(IOException e){e.printStackTrace();}
+        } catch(IOException | ClassNotFoundException e){e.printStackTrace();}
         return true;
+    }
+
+    private void makePrimaryAccount(String name) throws IOException, ClassNotFoundException {
+        ObjectInputStream input;
+        File[] GameFiles = mGameDirectory.listFiles();
+        for (File gameFile : GameFiles) {
+            input = new ObjectInputStream(new FileInputStream(gameFile));
+            Player player = (Player) input.readObject();
+            if (!player.getName().equals(name)){
+                player.removePrimary();
+            }
+        }
     }
 }

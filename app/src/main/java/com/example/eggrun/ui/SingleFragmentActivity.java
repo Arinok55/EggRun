@@ -10,8 +10,10 @@ import android.view.View;
 
 import com.example.eggrun.R;
 
+import java.io.IOException;
+
 public abstract class SingleFragmentActivity extends AppCompatActivity {
-    protected abstract Fragment createFragment();
+    protected abstract Fragment createFragment() throws InterruptedException, IOException, ClassNotFoundException;
 
     @LayoutRes
     protected int getLayoutResId() {
@@ -27,7 +29,11 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
 
         if (fragment == null) {
-            fragment = createFragment();
+            try {
+                fragment = createFragment();
+            } catch (InterruptedException | IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();

@@ -10,6 +10,7 @@ public class Player implements Serializable {
     private String mName;
     private String mPassword;
     private String mFileName;
+    private boolean mPrimaryProfile = true;
 
     private List<Egg> mEggList;
     private List<Pet> mPetList;
@@ -46,4 +47,10 @@ public class Player implements Serializable {
     public void setFileName(String fileName){ mFileName = fileName; }
 
     public String getFileName() { return mFileName; }
+
+    public void setPrimary() { mPrimaryProfile = true; }
+
+    public void removePrimary() { mPrimaryProfile = false; }
+
+    public boolean isPrimary() { return mPrimaryProfile; }
 }
