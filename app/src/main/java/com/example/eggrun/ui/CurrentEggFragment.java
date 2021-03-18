@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -31,13 +32,14 @@ public class CurrentEggFragment extends Fragment {
 
         if (eggList.isEmpty()){
             layout = R.layout.fragment_current_egg_empty;
+            return inflater.inflate(layout, container, false);
         }
         else{
-            layout = R.layout.fragment_current_egg_empty;
+            layout = R.layout.fragment_current_number_eggs;
+            View view = inflater.inflate(layout, container, false);
+            TextView textView = (TextView) view.findViewById(R.id.numOfEggs);
+            textView.setText(String.valueOf(eggList.size()));
+            return view;
         }
-
-        View view = inflater.inflate(layout, container, false);
-
-        return view;
     }
 }

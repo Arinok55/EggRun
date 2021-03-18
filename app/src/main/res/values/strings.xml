@@ -20,4 +20,10 @@
     <string name="uncommon_button">Uncommon Egg\n3 Miles</string>
     <string name="rare_button">Rare Egg\n5 Miles</string>
     <string name="legendary_button">Legendary Egg\n10 Miles</string>
+    <string name="no_eggs">No Eggs</string>
+    <string name="legendary_egg">Legendary Egg</string>
+    <string name="rare_egg">Rare Egg</string>
+    <string name="uncommon_egg">Uncommon Egg</string>
+    <string name="common_egg">Common Egg</string>
+    <string name="num_eggs">Number of Eggs</string>
 </resources>
