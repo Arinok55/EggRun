@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.NewAccountActivity"/>
+        <activity android:name=".ui.AddEggActivity"/>
         <activity android:name=".ui.CurrentEggActivity"/>
     </application>
 

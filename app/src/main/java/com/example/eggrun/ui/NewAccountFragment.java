@@ -54,7 +54,11 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         final int viewId = view.getId();
         if (viewId == R.id.create_account_button) {
-            createAccount();
+            try {
+                createAccount();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else if(viewId == R.id.cancel_button){
             Activity activity = getActivity();
             activity.finish();
@@ -64,7 +68,7 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void createAccount(){
+    private void createAccount() throws IOException {
         Activity activity = getActivity();
         String username = mUsernameEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();

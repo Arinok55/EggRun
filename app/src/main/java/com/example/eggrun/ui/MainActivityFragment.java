@@ -2,6 +2,7 @@ package com.example.eggrun.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -65,6 +66,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
             player = (Player) input.readObject();
             if (player.isPrimary()) {
                 mPrimaryPlayer = player;
+                mPrimaryPlayer.setDirectory(mAppDirectory);
                 input.close();
                 return true;
             }
@@ -83,6 +85,9 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
 
         Activity activity = getActivity();
         if(viewId == R.id.hatchButton){
+            Intent intent = new Intent(activity, AddEggActivity.class);
+            intent.putExtra("player", mPrimaryPlayer);
+            startActivity(intent);
             Toast.makeText(activity.getApplicationContext(), "Pick an egg to add to the collection", Toast.LENGTH_SHORT).show();
         }
         else if (viewId == R.id.currentButton){
@@ -109,5 +114,40 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
             intent.putExtra("directory", mAppDirectory);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        Log.d(TAG, "onStart()");
+        try {
+            getPrimaryPlayer();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.d(TAG, "onResume()");
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        Log.d(TAG, "onPause()");
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        Log.d(TAG, "onStop()");
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Log.d(TAG, "onDestroy()");
     }
 }
