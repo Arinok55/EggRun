@@ -3,7 +3,6 @@ package com.example.eggrun.ui;
 import android.util.Log;
 import androidx.fragment.app.Fragment;
 import java.io.File;
-import java.io.IOException;
 
 public class MainActivity extends SingleFragmentActivity {
     private static final String TAG = "MainActivity";
