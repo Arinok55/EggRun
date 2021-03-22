@@ -17,32 +17,32 @@ import com.example.eggrun.classes.Player;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public class NewAccountFragment extends Fragment implements View.OnClickListener{
-    private static final String TAG = "NewAccountFragment";
+public class ChangeAccountFragment extends Fragment implements View.OnClickListener{
+    private static final String TAG = "ChangeAccountFragment";
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
-    private EditText mConfirmEditText;
 
     private File mGameDirectory;
+    private Player mPlayer;
 
-    public NewAccountFragment(File directory){
+    public ChangeAccountFragment(File directory){
         mGameDirectory = directory;
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreate()");
-        View view = inflater.inflate(R.layout.fragment_new_account, container, false);
+        View view = inflater.inflate(R.layout.fragment_change_account, container, false);
 
         mUsernameEditText = view.findViewById(R.id.username_text);
         mPasswordEditText = view.findViewById(R.id.password_text);
-        mConfirmEditText = view.findViewById(R.id.confirm_text);
 
-        Button createButton = view.findViewById(R.id.create_account_button);
+        Button createButton = view.findViewById(R.id.login_account_button);
         createButton.setOnClickListener(this);
         Button cancelButton = view.findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(this);
@@ -53,10 +53,10 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View view) {
         final int viewId = view.getId();
-        if (viewId == R.id.create_account_button) {
+        if (viewId == R.id.login_account_button) {
             try {
-                createAccount();
-            } catch (IOException e) {
+                loginAccount();
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         } else if(viewId == R.id.cancel_button){
@@ -68,61 +68,43 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void createAccount() throws IOException {
+    private void loginAccount() throws IOException, ClassNotFoundException {
         Activity activity = getActivity();
         String username = mUsernameEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
-        String confirm = mConfirmEditText.getText().toString();
 
-        if (password.equals(confirm) && !username.equals("") && !password.equals("")) {
-            Player player = new Player(username, password);
-            if (insertPlayer(player)) {
-                Toast.makeText(activity.getApplicationContext(), "New Account Created", Toast.LENGTH_SHORT).show();
+        if (!username.equals("") && !password.equals("")) {
+            if (loginPlayer(username, password)) {
+                Toast.makeText(activity.getApplicationContext(), "Account Changed to " + mPlayer.getName(), Toast.LENGTH_SHORT).show();
                 activity.finish();
             }
             else{
-                Toast.makeText(activity.getApplicationContext(), "Account already exists", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity.getApplicationContext(), "Username or Password do not match records", Toast.LENGTH_SHORT).show();
             }
         }
-        else if ((username.equals("")) || (password.equals("")) || (confirm.equals(""))) {
+        else if ((username.equals("")) || (password.equals(""))) {
             Toast.makeText(activity.getApplicationContext(), "Missing entry", Toast.LENGTH_SHORT).show();
-        }
-        else if (!password.equals(confirm)){
-            Toast.makeText(activity.getApplicationContext(), "Password and Confirm do not match", Toast.LENGTH_SHORT).show();
         }
         else{
             Toast.makeText(activity.getApplicationContext(), "An unknown account creation error occurred.", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private boolean insertPlayer(Player newPlayer){
+    private boolean loginPlayer(String name, String password) throws IOException, ClassNotFoundException {
         ObjectInputStream input;
-        ObjectOutputStream output;
-
         File[] GameFiles = mGameDirectory.listFiles();
         for (File gameFile : GameFiles) {
-            if (gameFile.isFile()) {
-                try {
-                    input = new ObjectInputStream(new FileInputStream(gameFile));
-                    Player player = (Player) input.readObject();
-
-                    if (player.getName().equals(newPlayer.getName())) {
-                        return false;
-                    }
-                    input.close();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+            input = new ObjectInputStream(new FileInputStream(gameFile));
+            mPlayer = (Player) input.readObject();
+            if (mPlayer.getName().equals(name) && mPlayer.getPassword().equals(password)){
+                mPlayer.setPrimary();
+                makePrimaryAccount(name);
+                input.close();
+                return true;
             }
+            input.close();
         }
-        try{
-            makePrimaryAccount(newPlayer.getName());
-            output = new ObjectOutputStream(new FileOutputStream(new File(mGameDirectory, newPlayer.getName())));
-            output.writeObject(newPlayer);
-            Log.d(TAG, "Writing player object");
-            output.close();
-        } catch(IOException | ClassNotFoundException e){e.printStackTrace();}
-        return true;
+        return false;
     }
 
     private void makePrimaryAccount(String name) throws IOException, ClassNotFoundException {
@@ -134,6 +116,7 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
             if (!player.getName().equals(name)){
                 player.removePrimary();
             }
+            input.close();
         }
     }
 }

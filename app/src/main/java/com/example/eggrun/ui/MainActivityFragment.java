@@ -1,8 +1,6 @@
 package com.example.eggrun.ui;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,7 +24,7 @@ import java.io.ObjectInputStream;
 
 public class MainActivityFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "MainActivityFragment";
-    private File mAppDirectory;
+    private final File mAppDirectory;
     private Player mPrimaryPlayer;
 
     public MainActivityFragment(File appDirectory) {
@@ -38,7 +36,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         Log.d(TAG, "onCreate()");
 
         try {
-            checkPrimaryPlayer();
+            openNewAccount();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -54,6 +52,47 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         optionsButton.setOnClickListener(this);
 
         return view;
+    }
+
+    public void onClick(View view) {
+        final int viewId = view.getId();
+
+        if (mPrimaryPlayer == null) {
+            try {
+                openNewAccount();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            if (viewId == R.id.hatchButton) {
+                Log.d(TAG, "opening AddEggActivity");
+                createPlayerActivity(AddEggActivity.class, mPrimaryPlayer);
+            } else if (viewId == R.id.currentButton) {
+                Log.d(TAG, "opening CurrentEggActivity");
+                createPlayerActivity(CurrentEggActivity.class, mPrimaryPlayer);
+            } else if (viewId == R.id.petsButton) {
+                Toast.makeText(getActivity().getApplicationContext(), "Pets button not implemented", Toast.LENGTH_SHORT).show();
+            } else if (viewId == R.id.optionsButton) {
+                Log.d(TAG, "opening SettingsActivity");
+                Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                intent.putExtra("directory", mAppDirectory);
+                startActivity(intent);
+            } else {
+                Log.d(TAG, "Error: Invalid button click");
+            }
+        }
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        Log.d(TAG, "onStart()");
+        try {
+            getPrimaryPlayer();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean getPrimaryPlayer() throws IOException, ClassNotFoundException {
@@ -75,79 +114,18 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         return false;
     }
 
-    public void onClick(View view) {
-        final int viewId = view.getId();
-        try {
-            checkPrimaryPlayer();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        Activity activity = getActivity();
-        if(viewId == R.id.hatchButton){
-            Intent intent = new Intent(activity, AddEggActivity.class);
-            intent.putExtra("player", mPrimaryPlayer);
-            startActivity(intent);
-            Toast.makeText(activity.getApplicationContext(), "Pick an egg to add to the collection", Toast.LENGTH_SHORT).show();
-        }
-        else if (viewId == R.id.currentButton){
-            Intent intent = new Intent(activity, CurrentEggActivity.class);
-            intent.putExtra("player", mPrimaryPlayer);
-            startActivity(intent);
-        }
-        else if (viewId == R.id.petsButton){
-            Toast.makeText(activity.getApplicationContext(), "Pets button not implemented", Toast.LENGTH_SHORT).show();
-        }
-        else if (viewId == R.id.optionsButton){
-            Toast.makeText(activity.getApplicationContext(), "Options button not implemented", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            Log.d(TAG, "Error: Invalid button click");
-        }
-    }
-
-    public void checkPrimaryPlayer() throws IOException, ClassNotFoundException {
+    private void openNewAccount() throws IOException, ClassNotFoundException {
         if (mPrimaryPlayer == null && !getPrimaryPlayer()) {
             Log.d(TAG, "Opening new account activity");
-            Activity activity = getActivity();
-            Intent intent = new Intent(activity, NewAccountActivity.class);
+            Intent intent = new Intent(getActivity(), NewAccountActivity.class);
             intent.putExtra("directory", mAppDirectory);
             startActivity(intent);
         }
     }
 
-    @Override
-    public void onStart(){
-        super.onStart();
-        Log.d(TAG, "onStart()");
-        try {
-            getPrimaryPlayer();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-        Log.d(TAG, "onResume()");
-    }
-
-    @Override
-    public void onPause(){
-        super.onPause();
-        Log.d(TAG, "onPause()");
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        Log.d(TAG, "onStop()");
-    }
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        Log.d(TAG, "onDestroy()");
+    public void createPlayerActivity(Class<?> activity, Player player){
+        Intent intent = new Intent(getActivity(), activity);
+        intent.putExtra("player", player);
+        startActivity(intent);
     }
 }
