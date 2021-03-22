@@ -6,15 +6,14 @@ import java.io.File;
 
 public class NewAccountActivity extends SingleFragmentActivity {
     private NewAccountFragment mNewAccountFragment;
-    private File directory;
+    private File mDirectory;
 
     @Override
     protected Fragment createFragment(){
         if (mNewAccountFragment == null){
-            directory = (File) getIntent().getSerializableExtra("directory");
-            mNewAccountFragment = new NewAccountFragment(directory);
+            mDirectory = (File) getIntent().getSerializableExtra("directory");
+            mNewAccountFragment = new NewAccountFragment(mDirectory);
         }
         return mNewAccountFragment;
     }
-
 }

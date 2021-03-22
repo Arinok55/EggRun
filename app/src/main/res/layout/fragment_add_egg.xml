@@ -35,7 +35,8 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/eggRunTitle"
-            app:srcCompat="@drawable/common_egg" />
+            app:srcCompat="@drawable/common_egg"
+            android:contentDescription="@null" />
 
         <ImageButton
             android:id="@+id/addUncommonEggButton"
@@ -48,7 +49,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/addCommonEggButton"
             app:layout_constraintTop_toBottomOf="@+id/eggRunTitle"
-            app:srcCompat="@drawable/uncommon_egg" />
+            app:srcCompat="@drawable/uncommon_egg"
+            android:contentDescription="@null" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline3"
@@ -66,7 +68,8 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addCommonEggButton"
-            app:srcCompat="@drawable/rare_egg" />
+            app:srcCompat="@drawable/rare_egg"
+            android:contentDescription="@null" />
 
         <ImageButton
             android:id="@+id/addLegendaryEggButton"
@@ -76,13 +79,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
             app:layout_constraintTop_toBottomOf="@+id/addUncommonEggButton"
-            app:srcCompat="@drawable/legendary_egg" />
+            app:srcCompat="@drawable/legendary_egg"
+            android:contentDescription="@null" />
 
         <TextView
             android:id="@+id/commonEggText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="@string/common_egg"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
@@ -93,7 +96,6 @@
             android:id="@+id/uncommonEggText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="@string/uncommon_egg"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -104,7 +106,6 @@
             android:id="@+id/rareEggText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="@string/rare_egg"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
@@ -115,7 +116,6 @@
             android:id="@+id/legendaryEggText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="@string/legendary_egg"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"

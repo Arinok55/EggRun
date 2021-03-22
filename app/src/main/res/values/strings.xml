@@ -26,4 +26,9 @@
     <string name="uncommon_egg">Uncommon Egg</string>
     <string name="common_egg">Common Egg</string>
     <string name="num_eggs">Number of Eggs</string>
+    <string name="changeAccount">Change Account</string>
+    <string name="createNewAccount">Create New Account</string>
+    <string name="switchAccount">Switch Account</string>
+    <string name="login">Login</string>
+    <string name="deleteAccount">Delete Account</string>
 </resources>
