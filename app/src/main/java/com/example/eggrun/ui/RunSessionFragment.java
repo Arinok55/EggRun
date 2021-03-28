@@ -1,6 +1,5 @@
 package com.example.eggrun.ui;
 
-import android.media.effect.EffectFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +22,7 @@ public class RunSessionFragment extends Fragment {
     }
     public RunSessionFragment(String eggType){
         eggFactory = new EggFactory();
-        runSession = new RunSession(eggFactory.createEgg(eggType));
+        runSession = new RunSession(0.5);
     }
 
     @Override

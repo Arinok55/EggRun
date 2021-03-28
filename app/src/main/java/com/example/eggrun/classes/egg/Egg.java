@@ -9,4 +9,6 @@ public interface Egg {
     void addRunSession(RunSession runSession);
     List<RunSession> getRunSessionList();
     double DistanceToHatch();
+    boolean canHatch();
+    int getImageId();
 }

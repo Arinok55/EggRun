@@ -35,7 +35,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/eggRunTitle"
-            app:srcCompat="@drawable/common_egg"
+            app:srcCompat="@drawable/common_egg_image"
             android:contentDescription="@null" />
 
         <ImageButton
@@ -49,7 +49,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/addCommonEggButton"
             app:layout_constraintTop_toBottomOf="@+id/eggRunTitle"
-            app:srcCompat="@drawable/uncommon_egg"
+            app:srcCompat="@drawable/uncommon_egg_image"
             android:contentDescription="@null" />
 
         <androidx.constraintlayout.widget.Guideline
@@ -68,7 +68,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addCommonEggButton"
-            app:srcCompat="@drawable/rare_egg"
+            app:srcCompat="@drawable/rare_egg_image"
             android:contentDescription="@null" />
 
         <ImageButton
@@ -79,7 +79,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
             app:layout_constraintTop_toBottomOf="@+id/addUncommonEggButton"
-            app:srcCompat="@drawable/legendary_egg"
+            app:srcCompat="@drawable/legendary_egg_image"
             android:contentDescription="@null" />
 
         <TextView
@@ -90,7 +90,8 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/eggRunTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/eggRunTitle"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/uncommonEggText"
@@ -100,7 +101,8 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
-            app:layout_constraintTop_toTopOf="@+id/addUncommonEggButton" />
+            app:layout_constraintTop_toTopOf="@+id/addUncommonEggButton"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/rareEggText"
@@ -110,7 +112,8 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addCommonEggButton" />
+            app:layout_constraintTop_toBottomOf="@+id/addCommonEggButton"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/legendaryEggText"
@@ -120,7 +123,8 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline3"
-            app:layout_constraintTop_toBottomOf="@+id/addUncommonEggButton" />
+            app:layout_constraintTop_toBottomOf="@+id/addUncommonEggButton"
+            android:textColor="@color/black"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

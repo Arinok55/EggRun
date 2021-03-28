@@ -26,7 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/no_eggs"
-            android:textSize="80sp"/>
+            android:textSize="80sp"
+            android:textColor="@color/black"/>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
