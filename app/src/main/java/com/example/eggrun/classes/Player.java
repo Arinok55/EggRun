@@ -19,7 +19,7 @@ public class Player implements Serializable {
     private ArrayList<Egg> mEggList;
     private ArrayList<Pet> mPetList;
 
-    public Player(String name, String password) throws IOException {
+    public Player(String name, String password) {
         mName = name;
         mPassword = password;
         mEggList = new ArrayList<>();
@@ -39,33 +39,33 @@ public class Player implements Serializable {
         return mEggList;
     }
 
-    public void addEgg(Egg egg) throws IOException {
+    public boolean addEgg(Egg egg) {
         mEggList.add(egg);
-        saveData();
+        return saveData();
     }
 
-    public void removeEgg(Egg egg) throws IOException {
+    public boolean removeEgg(Egg egg) {
         mEggList.remove(egg);
-        saveData();
+        return saveData();
     }
 
     public ArrayList<Pet> getPetList(){
         return mPetList;
     }
 
-    public void addPet(Pet pet) throws IOException {
+    public boolean addPet(Pet pet) {
         mPetList.add(pet);
-        saveData();
+        return saveData();
     }
 
-    public void setPrimary() throws IOException {
+    public boolean setPrimary() {
         mPrimaryProfile = true;
-        saveData();
+        return saveData();
     }
 
-    public void removePrimary() throws IOException {
+    public boolean removePrimary() {
         mPrimaryProfile = false;
-        saveData();
+        return saveData();
     }
 
     public boolean isPrimary() {
@@ -76,12 +76,21 @@ public class Player implements Serializable {
         mDirectory = directory;
     }
 
-    private void saveData() throws IOException {
-        if(mDirectory != null && mDirectory.isDirectory()){
-            ObjectOutputStream output;
-            output = new ObjectOutputStream(new FileOutputStream(new File(mDirectory, mName)));
-            output.writeObject(this);
-            output.close();
+    public boolean saveData() {
+        if(mDirectory != null && mDirectory.isDirectory()) {
+            try {
+                ObjectOutputStream output;
+                output = new ObjectOutputStream(new FileOutputStream(new File(mDirectory, mName)));
+                output.writeObject(this);
+                output.close();
+                return true;
+            }
+            catch (IOException e){
+                return false;
+            }
+        }
+        else{
+            return false;
         }
     }
 }

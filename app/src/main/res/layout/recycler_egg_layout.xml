@@ -17,23 +17,23 @@
 
     <TextView
         android:id="@+id/egg_text"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="@dimen/egg_height"
+        android:layout_weight="1"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:text="10 Miles"
+        android:text=""
         android:textColor="@color/black"
-        android:layout_weight="1"
         android:textSize="16sp"
         tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/egg_button"
-        android:text="@string/incubate"
-        android:layout_width="wrap_content"
+        android:layout_width="130dp"
         android:layout_height="@dimen/egg_height"
-        android:textSize="16sp"
         android:layout_weight="1"
+        android:text="@string/incubate"
+        android:textSize="16sp"
         tools:ignore="MissingConstraints" />
 
 </LinearLayout>

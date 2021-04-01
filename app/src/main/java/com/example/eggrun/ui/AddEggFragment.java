@@ -49,39 +49,23 @@ public class AddEggFragment extends Fragment implements View.OnClickListener{
         final int viewId = view.getId();
 
         if (viewId == R.id.addCommonEggButton){
-            try {
-                addEgg("common");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            addEgg("common");
         }
         else if (viewId == R.id.addUncommonEggButton){
-            try {
-                addEgg("uncommon");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            addEgg("uncommon");
         }
         else if (viewId == R.id.addRareEggButton){
-            try {
-                addEgg("rare");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            addEgg("rare");
         }
         else if (viewId == R.id.addLegendaryEggButton){
-            try {
-                addEgg("legendary");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            addEgg("legendary");
         }
         else {
             Log.d(TAG, "Error: Invalid button click");
         }
     }
 
-    private void addEgg(String name) throws IOException {
+    private void addEgg(String name) {
         EggFactory eggFactory = new EggFactory();
         Egg egg = eggFactory.createEgg(name);
         mPlayer.addEgg(egg);

@@ -7,13 +7,18 @@ import com.example.eggrun.classes.RunSession;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class RareEgg implements Egg, Serializable {
-    private List<RunSession> mRunSessionList;
+    private ArrayList<RunSession> mRunSessionList;
     private double mDistanceToHatch = 5.0;
     private int mImage = R.drawable.rare_egg_image;
+
+    public RareEgg(){
+        mRunSessionList = new ArrayList<>();
+    }
 
     @Override
     public void addRunSession(RunSession runSession){

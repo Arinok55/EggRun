@@ -7,6 +7,7 @@ import com.example.eggrun.classes.RunSession;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -14,6 +15,10 @@ public class LegendaryEgg implements Egg, Serializable {
     private List<RunSession> mRunSessionList;
     private double mDistanceToHatch = 10.0;
     private int mImage = R.drawable.legendary_egg_image;
+
+    public LegendaryEgg(){
+        mRunSessionList = new ArrayList<>();
+    }
 
     @Override
     public void addRunSession(RunSession runSession){

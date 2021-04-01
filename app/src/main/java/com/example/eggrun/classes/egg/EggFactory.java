@@ -18,7 +18,6 @@ public class EggFactory {
         else if (eggType.equalsIgnoreCase("LEGENDARY")){
             return new LegendaryEgg();
         }
-
         return null;
     }
 }

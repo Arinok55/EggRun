@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface Pet {
     List<RunSession> getRunSessionList();
-    Image getImage();
+    int getImage();
 }
