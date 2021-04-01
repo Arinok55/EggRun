@@ -1,5 +1,6 @@
 package com.example.eggrun.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import androidx.fragment.app.Fragment;
 
 import com.example.eggrun.R;
+import com.example.eggrun.classes.Player;
 import com.example.eggrun.classes.RunSession;
 import com.example.eggrun.classes.egg.Egg;
 
@@ -17,10 +19,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class TEST_EGG_HATCH_FRAGMENT extends Fragment implements View.OnClickListener{
     private static final String TAG = "TEST_EGG_HATCH_FRAGMENT";
-    private Egg mEgg;
+    private Player mPlayer;
+    private int mPosition;
 
-    TEST_EGG_HATCH_FRAGMENT(Egg egg){
-        mEgg = egg;
+    TEST_EGG_HATCH_FRAGMENT(Player player, int position){
+        mPlayer = player;
+        mPosition = position;
     }
 
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,29 +46,35 @@ public class TEST_EGG_HATCH_FRAGMENT extends Fragment implements View.OnClickLis
     @Override
     public void onClick(View view) {
         final int viewId = view.getId();
+        Egg egg = mPlayer.getEggList().get(mPosition);
 
         if (viewId == R.id.button){
-            Log.d(TAG, "Adding 0.25 miles to " + mEgg.toString());
-            RunSession runSession = new RunSession(0.25);
-            mEgg.addRunSession(runSession);
+            addData(egg, 0.25);
         }
         else if (viewId == R.id.button2){
-            Log.d(TAG, "Adding 0.5 miles to " + mEgg.toString());
-            RunSession runSession = new RunSession(0.5);
-            mEgg.addRunSession(runSession);
+            addData(egg, 0.5);
         }
         else if (viewId == R.id.button3){
-            Log.d(TAG, "Adding 1 mile to " + mEgg.toString());
-            RunSession runSession = new RunSession(1);
-            mEgg.addRunSession(runSession);
+            addData(egg, 1);
         }
         else if (viewId == R.id.button4){
-            Log.d(TAG, "Adding 2 miles to " + mEgg.toString());
-            RunSession runSession = new RunSession(2);
-            mEgg.addRunSession(runSession);
+            addData(egg, 2);
         }
         else{
             Log.d(TAG, "Error! unknown button press.");
+        }
+    }
+
+    private void addData(Egg egg, double distance){
+        Log.d(TAG, "Adding " + distance + " miles to " + egg.toString());
+        RunSession runSession = new RunSession(distance);
+        egg.addRunSession(runSession);
+        if (mPlayer.saveData()){
+            Log.d(TAG, "Success!");
+            Intent intent = new Intent(getActivity(), CurrentEggActivity.class);
+            intent.putExtra("player", mPlayer);
+            getActivity().finish();
+            startActivity(intent);
         }
     }
 }

@@ -33,4 +33,6 @@
     <string name="deleteAccount">Delete Account</string>
     <string name="incubate">Incubate</string>
     <string name="hatch">Hatch</string>
+    <string name="hatch_egg">hatch_egg</string>
+    <string name="your_egg_hatched">Your egg hatched!!</string>
 </resources>

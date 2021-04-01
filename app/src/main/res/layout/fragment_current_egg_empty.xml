@@ -15,9 +15,9 @@
         <ImageView
             android:id="@+id/eggRunTitle"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="@dimen/title_height"
             android:contentDescription="@string/Title"
-            app:srcCompat="@drawable/title"
+            app:srcCompat="@drawable/egg_run_title"
             tools:ignore="MissingConstraints" />
 
         <TextView

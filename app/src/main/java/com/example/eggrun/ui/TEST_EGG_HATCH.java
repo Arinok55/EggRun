@@ -10,6 +10,8 @@ public class TEST_EGG_HATCH  extends SingleFragmentActivity{
 
     @Override
     protected Fragment createFragment() {
-        return new TEST_EGG_HATCH_FRAGMENT((Egg) getIntent().getSerializableExtra("egg"));
+        Player mPlayer = (Player) getIntent().getSerializableExtra("player");
+        int pos = (int) getIntent().getSerializableExtra("position");
+        return new TEST_EGG_HATCH_FRAGMENT(mPlayer, pos);
     }
 }

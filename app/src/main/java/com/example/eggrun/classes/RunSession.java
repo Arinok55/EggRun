@@ -1,8 +1,9 @@
 package com.example.eggrun.classes;
 
+import java.io.Serializable;
 import java.sql.Time;
 
-public class RunSession {
+public class RunSession implements Serializable {
     private final double mDistance;
     private Time mTime;
 

@@ -7,12 +7,17 @@ import com.example.eggrun.classes.RunSession;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UncommonEgg implements Egg, Serializable {
-    private List<RunSession> mRunSessionList;
+    private ArrayList<RunSession> mRunSessionList;
     private double mDistanceToHatch = 3.0;
     private int mImage = R.drawable.uncommon_egg_image;
+
+    public UncommonEgg(){
+        mRunSessionList = new ArrayList<>();
+    }
 
     @Override
     public void addRunSession(RunSession runSession){
