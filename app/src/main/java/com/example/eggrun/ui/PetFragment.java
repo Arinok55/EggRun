@@ -15,25 +15,25 @@ import com.example.eggrun.classes.Player;
 
 import org.jetbrains.annotations.NotNull;
 
-public class CurrentEggFragment extends Fragment {
-    private static final String TAG = "CurrentEggFragment";
+public class PetFragment extends Fragment {
+    private static final String TAG = "PetFragment";
     private final Player mPlayer;
 
-    public CurrentEggFragment(Player player) {
+    public PetFragment(Player player) {
         mPlayer = player;
     }
 
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreate()");
 
-        if (mPlayer.getEggList().isEmpty()){
-            return inflater.inflate(R.layout.fragment_current_egg_empty, container, false);
+        if (mPlayer.getPetList().isEmpty()){
+            return inflater.inflate(R.layout.fragment_pets_empty, container, false);
         }
         else{
-            View view = inflater.inflate(R.layout.fragment_current_number_eggs, container, false);
+            View view = inflater.inflate(R.layout.fragment_number_pets, container, false);
             RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-            EggAdapter eggAdapter = new EggAdapter(mPlayer);
-            recyclerView.setAdapter(eggAdapter);
+            PetAdapter petAdapter = new PetAdapter(mPlayer);
+            recyclerView.setAdapter(petAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             return view;
         }

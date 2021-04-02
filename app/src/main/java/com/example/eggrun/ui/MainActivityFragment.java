@@ -72,7 +72,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
                 Log.d(TAG, "opening CurrentEggActivity");
                 createPlayerActivity(CurrentEggActivity.class, mPrimaryPlayer);
             } else if (viewId == R.id.petsButton) {
-                Toast.makeText(getActivity().getApplicationContext(), "Pets button not implemented", Toast.LENGTH_SHORT).show();
+                createPlayerActivity(PetActivity.class, mPrimaryPlayer);
             } else if (viewId == R.id.optionsButton) {
                 Log.d(TAG, "opening SettingsActivity");
                 Intent intent = new Intent(getActivity(), SettingsActivity.class);
