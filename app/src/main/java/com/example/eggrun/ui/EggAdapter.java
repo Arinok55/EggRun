@@ -24,13 +24,11 @@ import java.util.ArrayList;
 
 public class EggAdapter extends RecyclerView.Adapter<EggAdapter.ViewHolder>{
     private static final String TAG = "EggAdapter";
-    private ArrayList<Egg> eggList;
-    private Player mPlayer;
+    private final Player mPlayer;
     private Context mContext;
 
     public EggAdapter(Player player){
         Log.d(TAG, "creating new EggAdapter");
-        eggList = player.getEggList();
         mPlayer = player;
     }
 
@@ -45,7 +43,7 @@ public class EggAdapter extends RecyclerView.Adapter<EggAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NotNull ViewHolder viewHolder, int position){
-        eggList = mPlayer.getEggList();
+        ArrayList<Egg> eggList = mPlayer.getEggList();
         Egg egg = eggList.get(position);
         viewHolder.imageView.setImageResource(egg.getImageId());
 

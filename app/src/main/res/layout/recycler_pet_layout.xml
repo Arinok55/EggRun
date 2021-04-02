@@ -11,17 +11,17 @@
         android:id="@+id/pet_View"
         android:layout_width="0dp"
         android:layout_height="80dp"
-        android:layout_weight="10"
+        android:layout_weight="20"
         app:srcCompat="@drawable/legendary_egg_image"
         tools:ignore="ContentDescription,MissingConstraints" />
 
 
     <Button
         android:id="@+id/pet_button"
-        android:layout_width="130dp"
-        android:layout_height="@dimen/egg_height"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
         android:layout_weight="1"
-        android:text="@string/incubate"
+        android:text="@string/view"
         android:textSize="16sp"
         tools:ignore="MissingConstraints" />
 
