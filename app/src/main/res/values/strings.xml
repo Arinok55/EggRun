@@ -37,4 +37,7 @@
     <string name="your_egg_hatched">Your egg hatched!!</string>
     <string name="view">View</string>
     <string name="no_pets">No Pets</string>
+    <string name="time">Time</string>
+    <string name="distance">Distance</string>
+    <string name="end_run">End Run</string>
 </resources>
