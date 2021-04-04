@@ -113,10 +113,10 @@ public class RunSessionActivity extends SingleFragmentActivity implements OnMapR
         setContentView(R.layout.activity_run_session);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         locationRequest = LocationRequest.create();
-        //request updates for the specifed time, here updated every 2 seconds
+        //request updates for the specified time, here updated every 2 seconds
         locationRequest.setInterval(2000);
-        //the minimum allowed time your allowed to get updates, in other words you can't get get updates faster than 1 seconds here
-        locationRequest.setFastestInterval(1000);
+        //the minimum allowed time your allowed to get updates, in other words you can't get get updates faster than 0.5 seconds here
+        locationRequest.setFastestInterval(500);
         //might change to lower priority to save battery later
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
@@ -174,7 +174,6 @@ public class RunSessionActivity extends SingleFragmentActivity implements OnMapR
                 this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-            return;
         }
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
     }
@@ -185,11 +184,7 @@ public class RunSessionActivity extends SingleFragmentActivity implements OnMapR
 
     private void askLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-            } else {
-                ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-            }
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
         }
     }
 
@@ -218,8 +213,7 @@ public class RunSessionActivity extends SingleFragmentActivity implements OnMapR
         int width = 150;
         BitmapDrawable eggImage = (BitmapDrawable)getResources().getDrawable(R.drawable.egg_marker);
         Bitmap eggBitMap = eggImage.getBitmap();
-        Bitmap eggMarker = Bitmap.createScaledBitmap(eggBitMap, width, height, false);
-        return eggMarker;
+        return Bitmap.createScaledBitmap(eggBitMap, width, height, false);
     }
 
     public void calculateDistance(){

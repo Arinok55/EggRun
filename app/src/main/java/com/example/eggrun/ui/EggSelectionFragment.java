@@ -12,22 +12,22 @@ import androidx.fragment.app.Fragment;
 import com.example.eggrun.R;
 
 public class EggSelectionFragment extends Fragment implements View.OnClickListener{
-    private Button commonButton, uncommonButton, rareButton, legendaryButton;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_egg_selection, container, false);
 
-        commonButton = v.findViewById(R.id.commonButton);
+        Button commonButton = v.findViewById(R.id.commonButton);
         commonButton.setOnClickListener(this);
 
-        uncommonButton = v.findViewById(R.id.uncommonButton);
+        Button uncommonButton = v.findViewById(R.id.uncommonButton);
         uncommonButton.setOnClickListener(this);
 
-        rareButton = v.findViewById(R.id.rareButton);
+        Button rareButton = v.findViewById(R.id.rareButton);
         rareButton.setOnClickListener(this);
 
-        legendaryButton = v.findViewById(R.id.legendaryButton);
+        Button legendaryButton = v.findViewById(R.id.legendaryButton);
         legendaryButton.setOnClickListener(this);
         return v;
     }
