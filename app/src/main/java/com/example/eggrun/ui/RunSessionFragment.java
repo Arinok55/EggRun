@@ -25,14 +25,13 @@ import java.util.Locale;
 public class RunSessionFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "RunSessionFragment";
 
-    private Player mPlayer;
-    private int mPosition;
+    private final Player mPlayer;
+    private final int mPosition;
 
     //distance ran
     private float distance;
     private TextView timerText;
     private TextView distanceText;
-    private Button endRunButton;
 
     //total time ran
     private int seconds = 0;
@@ -43,7 +42,7 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
         View view = inflater.inflate(R.layout.fragment_run_session, container, false);
         timerText = view.findViewById(R.id.time_view);
         distanceText = view.findViewById(R.id.distance_view);
-        endRunButton = view.findViewById(R.id.endRunButton);
+        Button endRunButton = view.findViewById(R.id.endRunButton);
         endRunButton.setOnClickListener(this);
         distance = 0;
         runTimerAndDistance();

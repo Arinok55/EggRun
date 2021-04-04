@@ -44,14 +44,12 @@ public class RunSessionAdapter extends RecyclerView.Adapter<RunSessionAdapter.Vi
     public void onBindViewHolder(@NotNull ViewHolder viewHolder, int position){
         ArrayList<RunSession> runSessionList = (ArrayList<RunSession>) mPet.getRunSessionList();
         RunSession runSession = runSessionList.get(position);
+        viewHolder.textView.setText(runSession.getDate().toString());
         viewHolder.textButton.setOnClickListener(v -> {
-            /*
-            Log.d(TAG, "Opening view_pet_activity.");
-            Intent intent = new Intent(mContext.getApplicationContext(), ViewPetActivity.class);
-            intent.putExtra("position", position);
+            Log.d(TAG, "Opening ViewRunSessionActivity.");
+            Intent intent = new Intent(mContext.getApplicationContext(), ViewRunSessionActivity.class);
+            intent.putExtra("runSession", runSession);
             mContext.startActivity(intent);
-
-             */
         });
     }
 
@@ -66,7 +64,7 @@ public class RunSessionAdapter extends RecyclerView.Adapter<RunSessionAdapter.Vi
 
         public ViewHolder(View view){
             super(view);
-            textView = view.findViewById(R.id.pet_View);
+            textView = view.findViewById(R.id.date);
             textButton = view.findViewById(R.id.view_button);
         }
     }
