@@ -39,4 +39,7 @@
     <string name="no_pets">No Pets</string>
     <string name="petImage">PetImage</string>
     <string name="default_distance">5 miles</string>
+    <string name="time">Time</string>
+    <string name="distance">Distance</string>
+    <string name="end_run">End Run</string>
 </resources>

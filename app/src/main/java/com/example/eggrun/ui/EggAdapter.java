@@ -61,10 +61,11 @@ public class EggAdapter extends RecyclerView.Adapter<EggAdapter.ViewHolder>{
             viewHolder.textButton.setBackgroundColor(Color.RED);
         }
         else {
-            viewHolder.textView.setText(egg.DistanceToHatch() + " miles");
+            viewHolder.textView.setText(String.format("%.2f", egg.DistanceToHatch()) + " miles");
             viewHolder.textButton.setOnClickListener(v -> {
                 Log.d(TAG, "Opening test_egg_hatch_fragment.");
-                Intent intent = new Intent(mContext.getApplicationContext(), TEST_EGG_HATCH.class);
+                //run session goes here egg hatch
+                Intent intent = new Intent(mContext.getApplicationContext(), RunSessionActivity.class);
                 intent.putExtra("player", mPlayer);
                 intent.putExtra("position", position);
                 mContext.startActivity(intent);

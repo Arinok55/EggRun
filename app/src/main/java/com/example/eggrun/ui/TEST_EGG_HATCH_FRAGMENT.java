@@ -67,7 +67,7 @@ public class TEST_EGG_HATCH_FRAGMENT extends Fragment implements View.OnClickLis
 
     private void addData(Egg egg, double distance){
         Log.d(TAG, "Adding " + distance + " miles to " + egg.toString());
-        RunSession runSession = new RunSession(distance);
+        RunSession runSession = new RunSession(distance, 1);
         egg.addRunSession(runSession);
         if (mPlayer.saveData()){
             Log.d(TAG, "Success!");
