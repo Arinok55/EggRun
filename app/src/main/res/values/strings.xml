@@ -37,4 +37,6 @@
     <string name="your_egg_hatched">Your egg hatched!!</string>
     <string name="view">View</string>
     <string name="no_pets">No Pets</string>
+    <string name="petImage">PetImage</string>
+    <string name="default_distance">5 miles</string>
 </resources>
