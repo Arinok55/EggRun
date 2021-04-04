@@ -28,6 +28,7 @@
         <activity android:name=".ui.CurrentEggActivity"/>
         <activity android:name=".ui.HatchEggActivity"/>
         <activity android:name=".ui.PetActivity"/>
+        <activity android:name=".ui.ViewPetActivity"/>
         <activity android:name=".ui.SettingsActivity"/>
         <activity android:name=".ui.ChangeAccountActivity"/>
         <activity android:name=".ui.DeleteAccountActivity"/>
