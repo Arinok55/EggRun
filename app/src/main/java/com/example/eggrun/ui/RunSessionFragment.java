@@ -56,11 +56,6 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
     public void onClick(View view) {
         final int viewId = view.getId();
         if(viewId == R.id.endRunButton){
@@ -132,6 +127,7 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
     @Override
     public void onStop(){
         super.onStop();
+        Log.d(TAG, "onStop()");
         if (!eggAdded) {
             addData(mEgg, distance);
         }
