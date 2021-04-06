@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.eggrun.R;
+import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
 
 import java.io.File;
@@ -28,8 +29,8 @@ public class ChangeAccountFragment extends Fragment implements View.OnClickListe
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
 
-    private File mGameDirectory;
-    private Player mPlayer;
+    private final File mGameDirectory;
+    private final Bus bus = Bus.getInstance();
 
     public ChangeAccountFragment(File directory){
         mGameDirectory = directory;
@@ -75,14 +76,17 @@ public class ChangeAccountFragment extends Fragment implements View.OnClickListe
 
         if (!username.equals("") && !password.equals("")) {
             if (loginPlayer(username, password)) {
-                Toast.makeText(activity.getApplicationContext(), "Account Changed to " + mPlayer.getName(), Toast.LENGTH_SHORT).show();
+                assert activity != null;
+                Toast.makeText(activity.getApplicationContext(), "Account Changed to " + bus.getPlayer().getName(), Toast.LENGTH_SHORT).show();
                 activity.finish();
             }
             else{
+                assert activity != null;
                 Toast.makeText(activity.getApplicationContext(), "Username or Password do not match records", Toast.LENGTH_SHORT).show();
             }
         }
         else if ((username.equals("")) || (password.equals(""))) {
+            assert activity != null;
             Toast.makeText(activity.getApplicationContext(), "Missing entry", Toast.LENGTH_SHORT).show();
         }
         else{
@@ -95,9 +99,11 @@ public class ChangeAccountFragment extends Fragment implements View.OnClickListe
         File[] GameFiles = mGameDirectory.listFiles();
         for (File gameFile : GameFiles) {
             input = new ObjectInputStream(new FileInputStream(gameFile));
-            mPlayer = (Player) input.readObject();
-            if (mPlayer.getName().equals(name) && mPlayer.getPassword().equals(password)){
-                mPlayer.setPrimary();
+            Player player = (Player) input.readObject();
+            if (player.getName().equals(name) && player.getPassword().equals(password)){
+                player.setPrimary();
+                Bus bus = Bus.getInstance();
+                bus.setPlayer(player);
                 makePrimaryAccount(name);
                 input.close();
                 return true;

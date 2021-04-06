@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.eggrun.R;
+import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
 import com.example.eggrun.classes.egg.Egg;
 import com.example.eggrun.classes.egg.EggFactory;
@@ -21,14 +22,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class AddEggFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "AddEggFragment";
-    private Player mPlayer;
+    private Bus bus = Bus.getInstance();
 
-    public AddEggFragment(Player player) {
-        mPlayer = player;
-    }
+    public AddEggFragment() {}
 
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreate()");
@@ -69,11 +69,11 @@ public class AddEggFragment extends Fragment implements View.OnClickListener{
     private void addEgg(String name) {
         EggFactory eggFactory = new EggFactory();
         Egg egg = eggFactory.createEgg(name);
-        mPlayer.addEgg(egg);
-        Log.d(TAG,"Added " + egg.toString() + " egg to " + mPlayer.getName());
+        bus.getPlayer().addEgg(egg);
+        Log.d(TAG,"Added " + egg.toString() + " egg to " + bus.getPlayer().getName());
 
-        ArrayList<Egg> eggList = mPlayer.getEggList();
-        Log.d(TAG,"Number of eggs in " + mPlayer.getName() + ": " + eggList.size());
-        Toast.makeText(getActivity().getApplicationContext(), "Added " + name + " Egg to the collection", Toast.LENGTH_SHORT).show();
+        ArrayList<Egg> eggList = bus.getPlayer().getEggList();
+        Log.d(TAG,"Number of eggs in " + bus.getPlayer().getName() + ": " + eggList.size());
+        Toast.makeText(requireActivity().getApplicationContext(), "Added " + name + " Egg to the collection", Toast.LENGTH_SHORT).show();
     }
 }

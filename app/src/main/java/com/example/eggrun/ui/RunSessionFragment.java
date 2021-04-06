@@ -1,5 +1,6 @@
 package com.example.eggrun.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.example.eggrun.R;
+import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
 import com.example.eggrun.classes.RunSession;
 import com.example.eggrun.classes.egg.Egg;
@@ -21,11 +23,12 @@ import com.example.eggrun.classes.egg.EggFactory;
 import org.w3c.dom.Text;
 
 import java.util.Locale;
+import java.util.Objects;
 
 public class RunSessionFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "RunSessionFragment";
 
-    private final Player mPlayer;
+    private static Bus bus = Bus.getInstance();
     private final int mPosition;
 
     //distance ran
@@ -48,8 +51,7 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
         runTimerAndDistance();
         return view;
     }
-    public RunSessionFragment(Player player, int position){
-        mPlayer = player;
+    public RunSessionFragment(int position){
         mPosition = position;
     }
 
@@ -60,7 +62,7 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
 
     public void onClick(View view) {
         final int viewId = view.getId();
-        Egg egg = mPlayer.getEggList().get(mPosition);
+        Egg egg = bus.getPlayer().getEggList().get(mPosition);
         if(viewId == R.id.endRunButton){
             addData(egg, distance);
         }
@@ -80,6 +82,7 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
         // so the code in the Runnable
         // will run almost immediately.
         handler.post(new Runnable() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void run()
             {
@@ -116,10 +119,9 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
     private void addData(Egg egg, double distance){
         RunSession runSession = new RunSession(distance, seconds);
         egg.addRunSession(runSession);
-        if (mPlayer.saveData()){
+        if (bus.getPlayer().saveData()){
             Intent intent = new Intent(getActivity(), CurrentEggActivity.class);
-            intent.putExtra("player", mPlayer);
-            getActivity().finish();
+            requireActivity().finish();
             startActivity(intent);
         }
     }

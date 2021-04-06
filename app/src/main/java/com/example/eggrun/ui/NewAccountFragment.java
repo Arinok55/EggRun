@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.eggrun.R;
+import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
 
 import java.io.File;
@@ -54,13 +55,10 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         final int viewId = view.getId();
         if (viewId == R.id.create_account_button) {
-            try {
-                createAccount();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            createAccount();
         } else if(viewId == R.id.cancel_button){
             Activity activity = getActivity();
+            assert activity != null;
             activity.finish();
         }
         else{
@@ -68,7 +66,7 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void createAccount() throws IOException {
+    private void createAccount(){
         Activity activity = getActivity();
         String username = mUsernameEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
@@ -77,17 +75,21 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
         if (password.equals(confirm) && !username.equals("") && !password.equals("")) {
             Player player = new Player(username, password);
             if (insertPlayer(player)) {
+                assert activity != null;
                 Toast.makeText(activity.getApplicationContext(), "New Account Created", Toast.LENGTH_SHORT).show();
                 activity.finish();
             }
             else{
+                assert activity != null;
                 Toast.makeText(activity.getApplicationContext(), "Account already exists", Toast.LENGTH_SHORT).show();
             }
         }
         else if ((username.equals("")) || (password.equals("")) || (confirm.equals(""))) {
+            assert activity != null;
             Toast.makeText(activity.getApplicationContext(), "Missing entry", Toast.LENGTH_SHORT).show();
         }
         else if (!password.equals(confirm)){
+            assert activity != null;
             Toast.makeText(activity.getApplicationContext(), "Password and Confirm do not match", Toast.LENGTH_SHORT).show();
         }
         else{
@@ -115,12 +117,17 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
                 }
             }
         }
+
         try{
             makePrimaryAccount(newPlayer.getName());
             output = new ObjectOutputStream(new FileOutputStream(new File(mGameDirectory, newPlayer.getName())));
             output.writeObject(newPlayer);
             Log.d(TAG, "Writing player object");
             output.close();
+
+            Bus bus = Bus.getInstance();
+            bus.setPlayer(newPlayer);
+
         } catch(IOException | ClassNotFoundException e){e.printStackTrace();}
         return true;
     }

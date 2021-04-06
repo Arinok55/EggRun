@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.example.eggrun.R;
+import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
 
 import java.io.File;
@@ -28,8 +29,8 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
 
-    private File mGameDirectory;
-    private Player mPlayer;
+    private final File mGameDirectory;
+    private final Bus bus = Bus.getInstance();
 
     public DeleteAccountFragment(File directory){
         mGameDirectory = directory;
@@ -61,6 +62,7 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
             }
         } else if(viewId == R.id.cancel_button){
             Activity activity = getActivity();
+            assert activity != null;
             activity.finish();
         }
         else{
@@ -75,14 +77,17 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
 
         if (!username.equals("") && !password.equals("")) {
             if (deletePlayer(username, password)) {
+                assert activity != null;
                 Toast.makeText(activity.getApplicationContext(), "Account Deleted", Toast.LENGTH_SHORT).show();
                 activity.finish();
             }
             else{
+                assert activity != null;
                 Toast.makeText(activity.getApplicationContext(), "Username or Password do not match records", Toast.LENGTH_SHORT).show();
             }
         }
         else if ((username.equals("")) || (password.equals(""))) {
+            assert activity != null;
             Toast.makeText(activity.getApplicationContext(), "Missing entry", Toast.LENGTH_SHORT).show();
         }
         else{
@@ -95,9 +100,13 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
         File[] GameFiles = mGameDirectory.listFiles();
         for (File gameFile : GameFiles) {
             input = new ObjectInputStream(new FileInputStream(gameFile));
-            mPlayer = (Player) input.readObject();
-            if (mPlayer.getName().equals(name) && mPlayer.getPassword().equals(password)){
+            Player player = (Player) input.readObject();
+            if (player.getName().equals(name) && player.getPassword().equals(password)){
                 input.close();
+
+                if (bus.getPlayer().getName().equals(name)){
+                    bus.removePlayer();
+                }
                 return gameFile.delete();
             }
             input.close();

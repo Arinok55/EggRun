@@ -20,15 +20,13 @@ import org.jetbrains.annotations.NotNull;
 public class HatchEggFragment extends Fragment {
     private static final String TAG = "HatchEggFragment";
     private Pet mPet;
-    private Player mPlayer;
 
     private boolean mIsActive = true;
     private final int mScreenTime = 3000;
     private final int mTimeIncrement = 100;
     private final int mSleepTime = 100;
 
-    public HatchEggFragment(Player player, Pet pet){
-        mPlayer = player;
+    public HatchEggFragment(Pet pet){
         mPet = pet;
     }
 
@@ -58,7 +56,6 @@ public class HatchEggFragment extends Fragment {
                     Activity activity = requireActivity();
                     activity.finish();
                     Intent intent = new Intent(getContext(), CurrentEggActivity.class);
-                    intent.putExtra("player", mPlayer);
                     startActivity(intent);
                 }
             }

@@ -51,6 +51,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.Array;
 
 public class RunSessionActivity extends SingleFragmentActivity implements OnMapReadyCallback {
@@ -75,10 +77,7 @@ public class RunSessionActivity extends SingleFragmentActivity implements OnMapR
     LocationCallback locationCallback = new LocationCallback() {
         //this where you get the results of the location requests, gets new location every 4 seconds
         @Override
-        public void onLocationResult(LocationResult locationResult) {
-            if (locationResult == null) {
-                return;
-            }
+        public void onLocationResult(@NotNull LocationResult locationResult) {
             for (Location location : locationResult.getLocations()) {
                 previousLocation = currentLocation;
                 currentLocation = location;
@@ -97,9 +96,8 @@ public class RunSessionActivity extends SingleFragmentActivity implements OnMapR
     @Override
     protected Fragment createFragment() {
         if (runSessionFragment == null) {
-            Player mPlayer = (Player) getIntent().getSerializableExtra("player");
             int pos = (int) getIntent().getSerializableExtra("position");
-            runSessionFragment = new RunSessionFragment(mPlayer, pos);
+            runSessionFragment = new RunSessionFragment(pos);
         }
         return runSessionFragment;
     }
@@ -233,8 +231,6 @@ public class RunSessionActivity extends SingleFragmentActivity implements OnMapR
             if (grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission granted
                 checkSettingsAndStartLocationUpdates();
-            } else {
-                //Permission not granted
             }
         }
     }

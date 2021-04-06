@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 
 import com.example.eggrun.R;
+import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
 
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +26,7 @@ import java.io.ObjectInputStream;
 public class MainActivityFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "MainActivityFragment";
     private final File mAppDirectory;
-    private Player mPrimaryPlayer;
+    private Bus mBus = Bus.getInstance();
 
     public MainActivityFragment(File appDirectory) {
         mAppDirectory = appDirectory;
@@ -34,6 +35,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreate()");
+
 
         try {
             openNewAccount();
@@ -57,7 +59,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     public void onClick(View view) {
         final int viewId = view.getId();
 
-        if (mPrimaryPlayer == null) {
+        if (!mBus.hasPlayer()) {
             try {
                 openNewAccount();
             } catch (IOException | ClassNotFoundException e) {
@@ -67,12 +69,12 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         else {
             if (viewId == R.id.hatchButton) {
                 Log.d(TAG, "opening AddEggActivity");
-                createPlayerActivity(AddEggActivity.class, mPrimaryPlayer);
+                createNewActivity(AddEggActivity.class);
             } else if (viewId == R.id.currentButton) {
                 Log.d(TAG, "opening CurrentEggActivity");
-                createPlayerActivity(CurrentEggActivity.class, mPrimaryPlayer);
+                createNewActivity(CurrentEggActivity.class);
             } else if (viewId == R.id.petsButton) {
-                createPlayerActivity(PetActivity.class, mPrimaryPlayer);
+                createNewActivity(PetActivity.class);
             } else if (viewId == R.id.optionsButton) {
                 Log.d(TAG, "opening SettingsActivity");
                 Intent intent = new Intent(getActivity(), SettingsActivity.class);
@@ -104,8 +106,8 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
             input = new ObjectInputStream(new FileInputStream(appFile));
             player = (Player) input.readObject();
             if (player.isPrimary()) {
-                mPrimaryPlayer = player;
-                mPrimaryPlayer.setDirectory(mAppDirectory);
+                mBus.setPlayer(player);
+                mBus.getPlayer().setDirectory(mAppDirectory);
                 input.close();
                 return true;
             }
@@ -115,7 +117,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     }
 
     private void openNewAccount() throws IOException, ClassNotFoundException {
-        if (mPrimaryPlayer == null && !getPrimaryPlayer()) {
+        if (!getPrimaryPlayer()) {
             Log.d(TAG, "Opening new account activity");
             Intent intent = new Intent(getActivity(), NewAccountActivity.class);
             intent.putExtra("directory", mAppDirectory);
@@ -123,9 +125,8 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    public void createPlayerActivity(Class<?> activity, Player player){
+    public void createNewActivity(Class<?> activity){
         Intent intent = new Intent(getActivity(), activity);
-        intent.putExtra("player", player);
         startActivity(intent);
     }
 }
