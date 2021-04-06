@@ -32,7 +32,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener{
 
         Button newAccountButton = view.findViewById(R.id.new_account_button);
         newAccountButton.setOnClickListener(this);
-        Button changeAccountButton = view.findViewById(R.id.change_account_button);
+        Button changeAccountButton = view.findViewById(R.id.login_button);
         changeAccountButton.setOnClickListener(this);
         Button deleteAccountButton = view.findViewById(R.id.delete_account_button);
         deleteAccountButton.setOnClickListener(this);
@@ -50,7 +50,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener{
             Log.d(TAG, "Opening NewAccountActivity");
             createDirectoryActivity(NewAccountActivity.class);
         }
-        else if (viewId == R.id.change_account_button){
+        else if (viewId == R.id.login_button){
             Log.d(TAG, "Opening ChangeAccountActivity");
             createDirectoryActivity(ChangeAccountActivity.class);
         }
@@ -61,6 +61,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener{
         else if (viewId == R.id.cancel_button){
             Log.d(TAG, "Closing SettingsActivity");
             Activity activity = getActivity();
+            assert activity != null;
             activity.finish();
         }
         else{
