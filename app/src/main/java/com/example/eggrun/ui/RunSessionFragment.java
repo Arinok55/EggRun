@@ -29,15 +29,20 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
     private static final String TAG = "RunSessionFragment";
 
     private static Bus bus = Bus.getInstance();
-    private final int mPosition;
+    private Egg mEgg;
+    private boolean eggAdded = false;
 
     //distance ran
-    private float distance;
+    private float distance = 0;
     private TextView timerText;
     private TextView distanceText;
 
     //total time ran
     private int seconds = 0;
+
+    public RunSessionFragment(int position){
+        mEgg = bus.getPlayer().getEggList().get(position);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,12 +52,8 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
         distanceText = view.findViewById(R.id.distance_view);
         Button endRunButton = view.findViewById(R.id.endRunButton);
         endRunButton.setOnClickListener(this);
-        distance = 0;
         runTimerAndDistance();
         return view;
-    }
-    public RunSessionFragment(int position){
-        mPosition = position;
     }
 
     @Override
@@ -62,9 +63,8 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
 
     public void onClick(View view) {
         final int viewId = view.getId();
-        Egg egg = bus.getPlayer().getEggList().get(mPosition);
         if(viewId == R.id.endRunButton){
-            addData(egg, distance);
+            eggAdded = addData(mEgg, distance);
         }
 
     }
@@ -116,13 +116,24 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
         this.distance = distance;
     }
 
-    private void addData(Egg egg, double distance){
+    private boolean addData(Egg egg, double distance){
+        Log.d(TAG, "Adding egg.");
         RunSession runSession = new RunSession(distance, seconds);
         egg.addRunSession(runSession);
         if (bus.getPlayer().saveData()){
             Intent intent = new Intent(getActivity(), CurrentEggActivity.class);
             requireActivity().finish();
             startActivity(intent);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if (!eggAdded) {
+            addData(mEgg, distance);
         }
     }
 }
