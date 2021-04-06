@@ -9,6 +9,6 @@ public class PetActivity extends SingleFragmentActivity{
 
     @Override
     protected Fragment createFragment(){
-        return new PetFragment((Player) getIntent().getSerializableExtra("player"));
+        return new PetFragment();
     }
 }

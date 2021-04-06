@@ -2,6 +2,7 @@ package com.example.eggrun.ui;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
 import com.example.eggrun.classes.egg.Egg;
 import com.example.eggrun.classes.pet.Pet;
@@ -12,15 +13,14 @@ public class HatchEggActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        Player mPlayer = (Player) getIntent().getSerializableExtra("player");
-
-        Egg egg = mPlayer.getEggList().remove((int) getIntent().getSerializableExtra("position"));
+        Bus bus = Bus.getInstance();
+        Egg egg = bus.getPlayer().getEggList().remove((int) getIntent().getSerializableExtra("position"));
         PetFactory petFactory = new PetFactory();
         Pet mPet = petFactory.createPet(egg);
 
-        mPlayer.addPet(mPet);
-        mPlayer.saveData();
+        bus.getPlayer().addPet(mPet);
+        bus.getPlayer().saveData();
 
-        return new HatchEggFragment(mPlayer, mPet);
+        return new HatchEggFragment(mPet);
     }
 }

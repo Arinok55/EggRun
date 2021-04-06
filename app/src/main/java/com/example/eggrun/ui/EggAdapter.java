@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eggrun.R;
+import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
 import com.example.eggrun.classes.egg.Egg;
 
@@ -24,12 +25,11 @@ import java.util.ArrayList;
 
 public class EggAdapter extends RecyclerView.Adapter<EggAdapter.ViewHolder>{
     private static final String TAG = "EggAdapter";
-    private final Player mPlayer;
+    private final Bus bus = Bus.getInstance();
     private Context mContext;
 
     public EggAdapter(Player player){
         Log.d(TAG, "creating new EggAdapter");
-        mPlayer = player;
     }
 
     @NotNull
@@ -43,7 +43,7 @@ public class EggAdapter extends RecyclerView.Adapter<EggAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NotNull ViewHolder viewHolder, int position){
-        ArrayList<Egg> eggList = mPlayer.getEggList();
+        ArrayList<Egg> eggList = bus.getPlayer().getEggList();
         Egg egg = eggList.get(position);
         viewHolder.imageView.setImageResource(egg.getImageId());
 
@@ -52,7 +52,6 @@ public class EggAdapter extends RecyclerView.Adapter<EggAdapter.ViewHolder>{
             viewHolder.textButton.setOnClickListener(v -> {
                 Log.d(TAG, "Opening HatchEggActivity.");
                 Intent intent = new Intent(mContext.getApplicationContext(), HatchEggActivity.class);
-                intent.putExtra("player", mPlayer);
                 intent.putExtra("position", position);
                 mContext.startActivity(intent);
                 ((Activity)mContext).finish();
@@ -66,7 +65,6 @@ public class EggAdapter extends RecyclerView.Adapter<EggAdapter.ViewHolder>{
                 Log.d(TAG, "Opening test_egg_hatch_fragment.");
                 //run session goes here egg hatch
                 Intent intent = new Intent(mContext.getApplicationContext(), RunSessionActivity.class);
-                intent.putExtra("player", mPlayer);
                 intent.putExtra("position", position);
                 mContext.startActivity(intent);
                 ((Activity)mContext).finish();
@@ -76,7 +74,7 @@ public class EggAdapter extends RecyclerView.Adapter<EggAdapter.ViewHolder>{
 
     @Override
     public int getItemCount(){
-        return mPlayer.getEggList().size();
+        return bus.getPlayer().getEggList().size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

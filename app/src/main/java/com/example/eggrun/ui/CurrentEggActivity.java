@@ -11,6 +11,6 @@ public class CurrentEggActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new CurrentEggFragment((Player) getIntent().getSerializableExtra("player"));
+        return new CurrentEggFragment();
     }
 }

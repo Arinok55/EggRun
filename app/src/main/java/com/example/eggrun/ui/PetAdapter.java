@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eggrun.R;
+import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
 import com.example.eggrun.classes.egg.Egg;
 import com.example.eggrun.classes.pet.Pet;
@@ -25,12 +26,11 @@ import java.util.ArrayList;
 
 public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder>{
     private static final String TAG = "PetAdapter";
-    private final Player mPlayer;
+    private Bus bus = Bus.getInstance();
     private Context mContext;
 
-    public PetAdapter(Player player){
+    public PetAdapter(){
         Log.d(TAG, "creating new PetAdapter");
-        mPlayer = player;
     }
 
     @NotNull
@@ -44,13 +44,12 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NotNull ViewHolder viewHolder, int position){
-        ArrayList<Pet> petList = mPlayer.getPetList();
+        ArrayList<Pet> petList = bus.getPlayer().getPetList();
         Pet pet = petList.get(position);
         viewHolder.imageView.setImageResource(pet.getImage());
         viewHolder.textButton.setOnClickListener(v -> {
             Log.d(TAG, "Opening view_pet_activity.");
             Intent intent = new Intent(mContext.getApplicationContext(), ViewPetActivity.class);
-            intent.putExtra("player", mPlayer);
             intent.putExtra("position", position);
             mContext.startActivity(intent);
         });
@@ -58,7 +57,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.ViewHolder>{
 
     @Override
     public int getItemCount(){
-        return mPlayer.getPetList().size();
+        return bus.getPlayer().getPetList().size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

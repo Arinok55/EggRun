@@ -2,6 +2,7 @@ package com.example.eggrun.ui;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
 
 public class ViewPetActivity extends SingleFragmentActivity{
@@ -9,8 +10,8 @@ public class ViewPetActivity extends SingleFragmentActivity{
 
     @Override
     protected Fragment createFragment(){
-        Player player = (Player) getIntent().getSerializableExtra("player");
+        Bus bus = Bus.getInstance();
         int pos = (int) getIntent().getSerializableExtra("position");
-        return new ViewPetFragment(player.getPetList().get(pos));
+        return new ViewPetFragment(bus.getPlayer().getPetList().get(pos));
     }
 }

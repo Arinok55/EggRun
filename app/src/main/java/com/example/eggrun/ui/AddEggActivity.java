@@ -8,6 +8,6 @@ public class AddEggActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new AddEggFragment((Player) getIntent().getSerializableExtra("player"));
+        return new AddEggFragment();
     }
 }
