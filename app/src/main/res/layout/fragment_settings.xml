@@ -29,13 +29,13 @@
             android:text="@string/createNewAccount" />
 
         <Button
-            android:id="@+id/change_account_button"
+            android:id="@+id/login_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:text="@string/switchAccount" />
+            android:text="@string/login" />
 
         <Button
             android:id="@+id/delete_account_button"

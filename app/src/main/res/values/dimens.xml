@@ -5,4 +5,5 @@
     <dimen name="title_height">250dp</dimen>
     <dimen name="standard_margin">5dp</dimen>
     <dimen name="standard_text_height">20sp</dimen>
+    <dimen name="large_text_height">30sp</dimen>
 </resources>

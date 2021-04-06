@@ -1,6 +1,7 @@
 package com.example.eggrun.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,11 +30,11 @@ public class ChangeAccountFragment extends Fragment implements View.OnClickListe
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
 
-    private final File mGameDirectory;
+    private final File mDirectory;
     private final Bus bus = Bus.getInstance();
 
     public ChangeAccountFragment(File directory){
-        mGameDirectory = directory;
+        mDirectory = directory;
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,8 +44,10 @@ public class ChangeAccountFragment extends Fragment implements View.OnClickListe
         mUsernameEditText = view.findViewById(R.id.username_text);
         mPasswordEditText = view.findViewById(R.id.password_text);
 
-        Button createButton = view.findViewById(R.id.login_account_button);
-        createButton.setOnClickListener(this);
+        Button loginButton = view.findViewById(R.id.login_account_button);
+        loginButton.setOnClickListener(this);
+        Button createAccountButton = view.findViewById(R.id.create_account_button);
+        createAccountButton.setOnClickListener(this);
         Button cancelButton = view.findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(this);
 
@@ -60,8 +63,18 @@ public class ChangeAccountFragment extends Fragment implements View.OnClickListe
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
-        } else if(viewId == R.id.cancel_button){
+        }
+        else if (viewId == R.id.create_account_button) {
+            Intent intent = new Intent(getActivity(), NewAccountActivity.class);
+            intent.putExtra("directory", mDirectory);
+            startActivity(intent);
             Activity activity = getActivity();
+            assert activity != null;
+            activity.finish();
+        }
+        else if(viewId == R.id.cancel_button){
+            Activity activity = getActivity();
+            assert activity != null;
             activity.finish();
         }
         else{
@@ -96,7 +109,7 @@ public class ChangeAccountFragment extends Fragment implements View.OnClickListe
 
     private boolean loginPlayer(String name, String password) throws IOException, ClassNotFoundException {
         ObjectInputStream input;
-        File[] GameFiles = mGameDirectory.listFiles();
+        File[] GameFiles = mDirectory.listFiles();
         for (File gameFile : GameFiles) {
             input = new ObjectInputStream(new FileInputStream(gameFile));
             Player player = (Player) input.readObject();
@@ -115,7 +128,7 @@ public class ChangeAccountFragment extends Fragment implements View.OnClickListe
 
     private void makePrimaryAccount(String name) throws IOException, ClassNotFoundException {
         ObjectInputStream input;
-        File[] GameFiles = mGameDirectory.listFiles();
+        File[] GameFiles = mDirectory.listFiles();
         for (File gameFile : GameFiles) {
             input = new ObjectInputStream(new FileInputStream(gameFile));
             Player player = (Player) input.readObject();
