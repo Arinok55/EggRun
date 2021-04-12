@@ -37,4 +37,22 @@ public class CurrentEggFragment extends Fragment {
             return view;
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"Resuming egg frag");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG,"Stopping egg frag");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"Destroying egg frag");
+    }
 }

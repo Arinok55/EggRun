@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.eggrun.R;
+import com.example.eggrun.classes.BackgroundLocationService;
 import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
 import com.example.eggrun.classes.RunSession;
@@ -28,6 +30,7 @@ import java.util.Objects;
 public class RunSessionFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "RunSessionFragment";
 
+    BackgroundLocationService backgroundLocationService;
     private static Bus bus = Bus.getInstance();
     private Egg mEgg;
     private boolean eggAdded = false;
@@ -60,6 +63,8 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
         final int viewId = view.getId();
         if(viewId == R.id.endRunButton){
             eggAdded = addData(mEgg, distance);
+            backgroundLocationService.removeLocationUpdates();
+
         }
 
     }
@@ -125,11 +130,33 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG,"onSaveInstanceState");
+    }
+
+    @Override
     public void onStop(){
         super.onStop();
         Log.d(TAG, "onStop()");
         if (!eggAdded) {
             addData(mEgg, distance);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG,"Resuming run frag");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG,"Destroying run frag");
+    }
+
+    public void setBackgroundLocationService(BackgroundLocationService backgroundLocationService) {
+        this.backgroundLocationService = backgroundLocationService;
     }
 }
