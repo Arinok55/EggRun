@@ -1,5 +1,6 @@
 package com.example.eggrun.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 
 import com.example.eggrun.R;
+import com.example.eggrun.classes.BackgroundLocationService;
 import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
 
@@ -35,7 +37,6 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreate()");
-
 
         try {
             openNewAccount();
@@ -90,10 +91,18 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     public void onStart(){
         super.onStart();
         Log.d(TAG, "onStart()");
+        Log.d(TAG, "Serivce is " + BackgroundLocationService.getInstance());
         try {
             getPrimaryPlayer();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+        }
+        if(BackgroundLocationService.getInstance() != null){
+            Intent intent = new Intent(this.getContext(), RunSessionActivity.class);
+            intent.putExtra("position", BackgroundLocationService.getInstance().getEggPostion());
+            requireActivity().finish();
+            this.getContext().startActivity(intent);
+
         }
     }
 

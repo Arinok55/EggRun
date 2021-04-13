@@ -112,6 +112,7 @@ public class RunSessionActivity extends SingleFragmentActivity implements OnMapR
     private float totalDistance;
     private float[] distance = new float[1];
 
+    private int pos;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private LocationRequest locationRequest;
@@ -123,7 +124,7 @@ public class RunSessionActivity extends SingleFragmentActivity implements OnMapR
     @Override
     protected Fragment createFragment() {
         if (runSessionFragment == null) {
-            int pos = (int) getIntent().getSerializableExtra("position");
+            pos = (int) getIntent().getSerializableExtra("position");
             runSessionFragment = new RunSessionFragment(pos);
         }
         return runSessionFragment;
@@ -149,9 +150,14 @@ public class RunSessionActivity extends SingleFragmentActivity implements OnMapR
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        backgroundLocationService.requestLocationUpdates();
+                        //check to see if a BackgroundService is already running, if its 0 that means no service was started before
+                        if(backgroundLocationService.getSeconds() == 0){
+                            backgroundLocationService.requestLocationUpdates();
+                            backgroundLocationService.setEggPostion(pos);
+                        }
                         runSessionFragment.setBackgroundLocationService(backgroundLocationService);
                         backgroundLocationService.setRunSessionFragment(runSessionFragment);
+
                     }
                 }, 2000);
 

@@ -103,7 +103,7 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
         RunSession runSession = new RunSession(distance, seconds);
         egg.addRunSession(runSession);
         if (bus.getPlayer().saveData()){
-            Intent intent = new Intent(getActivity(), CurrentEggActivity.class);
+            Intent intent = new Intent(this.getContext(), CurrentEggActivity.class);
             requireActivity().finish();
             startActivity(intent);
             return true;

@@ -42,8 +42,14 @@ import java.security.Provider;
 
 public class BackgroundLocationService extends Service {
     private static final String TAG = "BackgroundService";
+
+    //singleton
+    private static BackgroundLocationService INSTANCE = null;
+
     private static final String EXTRA_STARTED_FROM_NOTIFICATIOM = "com.example.eggrun.classes" + ".started_from_notification";
     private RunSessionFragment runSessionFragment;
+
+    private int eggPostion;
     //track time and distance in the service so that when the activities die they don't disapear too
     private Location previousLocation;
     private Location currentLocation;
@@ -76,7 +82,6 @@ public class BackgroundLocationService extends Service {
             //this where you get the results of the location requests, gets new location every 4 seconds
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                Log.d(TAG, locationResult.getLastLocation().toString() + " distance " + getTotalDistance()/1609);
                     super.onLocationResult(locationResult);
                     onNewLocation(locationResult.getLastLocation());
                 calculateDistance();
@@ -163,6 +168,7 @@ public class BackgroundLocationService extends Service {
     }
 
     public void removeLocationUpdates() {
+        INSTANCE = null;
         try{
             fusedLocationProviderClient.removeLocationUpdates(locationCallback);
             LocationServiceUtil.setRequestingLocationUpdates(this,false);
@@ -252,14 +258,6 @@ public class BackgroundLocationService extends Service {
         runTimer();
     }
 
-    public float getTotalDistance() {
-        return totalDistance;
-    }
-
-    public int getSeconds() {
-        return seconds;
-    }
-
     public void setRunSessionFragment(RunSessionFragment runSessionFragment) {
         this.runSessionFragment = runSessionFragment;
     }
@@ -275,8 +273,13 @@ public class BackgroundLocationService extends Service {
         }
     }
 
+    private BackgroundLocationService instance;
+
     public class LocalBinder extends Binder {
-        public BackgroundLocationService getService(){return BackgroundLocationService.this;}
+        public BackgroundLocationService getService(){
+            INSTANCE = BackgroundLocationService.this;
+            return BackgroundLocationService.this;
+        }
     }
 
 
@@ -306,5 +309,25 @@ public class BackgroundLocationService extends Service {
     public void onDestroy() {
         mServiceHandler.removeCallbacks(null);
         super.onDestroy();
+    }
+
+    public static BackgroundLocationService getInstance(){
+        return INSTANCE;
+    }
+
+    public float getTotalDistance() {
+        return totalDistance;
+    }
+
+    public int getSeconds() {
+        return seconds;
+    }
+
+    public int getEggPostion() {
+        return eggPostion;
+    }
+
+    public void setEggPostion(int eggPostion) {
+        this.eggPostion = eggPostion;
     }
 }
