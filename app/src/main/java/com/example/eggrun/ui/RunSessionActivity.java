@@ -151,6 +151,7 @@ public class RunSessionActivity extends SingleFragmentActivity implements OnMapR
                     public void run() {
                         backgroundLocationService.requestLocationUpdates();
                         runSessionFragment.setBackgroundLocationService(backgroundLocationService);
+                        backgroundLocationService.setRunSessionFragment(runSessionFragment);
                     }
                 }, 2000);
 
@@ -228,39 +229,15 @@ public class RunSessionActivity extends SingleFragmentActivity implements OnMapR
         return Bitmap.createScaledBitmap(eggBitMap, width, height, false);
     }
 
-    public void calculateDistance(){
-        if(previousLocation != null){
-            double startLat = previousLocation.getLatitude();
-            double startLng = previousLocation.getLongitude();
-            double endLat = currentLocation.getLatitude();
-            double endLng = currentLocation.getLongitude();
-            Location.distanceBetween(startLat,startLng,endLat,endLng,distance);
-            totalDistance += distance[0];
-        }
-    }
-
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onListenLocation(SendLocationToActivity event){
         if(event != null){
             //call change map here
-            previousLocation = currentLocation;
             currentLocation = event.getLocation();
-            calculateDistance();
-            if(runSessionFragment != null){
-                runSessionFragment.setDistance(totalDistance/1609);
-            }
             SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
             assert supportMapFragment != null;
             //calls onMapReady basically
             supportMapFragment.getMapAsync(RunSessionActivity.this);
-
-
-            String data = new StringBuilder()
-                    .append(event.getLocation().getLatitude())
-                    .append("/")
-                    .append(event.getLocation().getLongitude())
-                    .toString();
-            Toast.makeText(backgroundLocationService,data,Toast.LENGTH_SHORT).show();;
         }
     }
 

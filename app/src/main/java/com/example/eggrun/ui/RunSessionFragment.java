@@ -36,12 +36,12 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
     private boolean eggAdded = false;
 
     //distance ran
-    private float distance = 0;
+    private float distance;
     private TextView timerText;
     private TextView distanceText;
 
     //total time ran
-    private int seconds = 0;
+    private int seconds;
 
     public RunSessionFragment(int position){
         mEgg = bus.getPlayer().getEggList().get(position);
@@ -51,11 +51,15 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_run_session, container, false);
+        distance = 0f;
+        seconds = 0;
         timerText = view.findViewById(R.id.time_view);
         distanceText = view.findViewById(R.id.distance_view);
+
+        changeDistanceText();
+        changeTimerText();
         Button endRunButton = view.findViewById(R.id.endRunButton);
         endRunButton.setOnClickListener(this);
-        runTimerAndDistance();
         return view;
     }
 
@@ -69,51 +73,29 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
 
     }
 
-    private void runTimerAndDistance()
-    {
-        // Creates a new Handler
-        final Handler handler
-                = new Handler();
-
-        // Call the post() method,
-        // passing in a new Runnable.
-        // The post() method processes
-        // code without a delay,
-        // so the code in the Runnable
-        // will run almost immediately.
-        handler.post(new Runnable() {
-            @SuppressLint("DefaultLocale")
-            @Override
-            public void run()
-            {
-                int hours = seconds / 3600;
-                int minutes = (seconds % 3600) / 60;
-                int secs = seconds % 60;
-
-                // Format the seconds into hours, minutes,
-                // and seconds.
-                String time
-                        = String
-                        .format(Locale.getDefault(),
-                                "%d:%02d:%02d", hours,
-                                minutes, secs);
-
-                // Set the text view text.
-                timerText.setText(time);
-                //Set the distance
-                distanceText.setText(String.format("%.2f", distance));
-
-                seconds++;
-
-                // Post the code again
-                // with a delay of 1 second.
-                handler.postDelayed(this, 1000);
-            }
-        });
+    public void setSeconds(int seconds) {
+        this.seconds = seconds;
     }
 
     public void setDistance(float distance) {
         this.distance = distance;
+    }
+
+    public void changeTimerText() {
+        int hours = seconds / 3600;
+        int minutes = (seconds % 3600) / 60;
+        int secs = seconds % 60;
+
+        String time
+                = String
+                .format(Locale.getDefault(),
+                        "%d:%02d:%02d", hours,
+                        minutes, secs);
+        timerText.setText(time);
+    }
+
+    public void changeDistanceText() {
+        distanceText.setText(String.format("%.2f", distance));
     }
 
     private boolean addData(Egg egg, double distance){

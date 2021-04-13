@@ -1,5 +1,6 @@
 package com.example.eggrun.classes;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -24,6 +25,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.eggrun.R;
 import com.example.eggrun.ui.RunSessionActivity;
+import com.example.eggrun.ui.RunSessionFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -41,8 +43,14 @@ import java.security.Provider;
 public class BackgroundLocationService extends Service {
     private static final String TAG = "BackgroundService";
     private static final String EXTRA_STARTED_FROM_NOTIFICATIOM = "com.example.eggrun.classes" + ".started_from_notification";
+    private RunSessionFragment runSessionFragment;
+    //track time and distance in the service so that when the activities die they don't disapear too
     private Location previousLocation;
     private Location currentLocation;
+    private float totalDistance;
+    private float[] distance = new float[1];
+    private int seconds;
+
 
     private static final String CHANNEL_ID = "my_channel";
     private final IBinder mBinder = new LocalBinder();
@@ -61,16 +69,24 @@ public class BackgroundLocationService extends Service {
 
     @Override
     public void onCreate() {
+        totalDistance = 0f;
+        seconds = 0;
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         locationCallback = new LocationCallback() {
             //this where you get the results of the location requests, gets new location every 4 seconds
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                Log.d(TAG, locationResult.getLastLocation().toString());
+                Log.d(TAG, locationResult.getLastLocation().toString() + " distance " + getTotalDistance()/1609);
                     super.onLocationResult(locationResult);
                     onNewLocation(locationResult.getLastLocation());
+                calculateDistance();
+                //set distances and time for RunSession frag
+                if(runSessionFragment != null){
+                    runSessionFragment.setDistance(totalDistance/1609);
+                }
             }
         };
+
 
         createLocationRequest();
         getLastLocation();
@@ -83,6 +99,39 @@ public class BackgroundLocationService extends Service {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, getString(R.string.app_name), NotificationManager.IMPORTANCE_DEFAULT);
             mNotificationManager.createNotificationChannel(mChannel);
+        }
+    }
+
+    private void runTimer()
+    {
+        // Creates a new Handler
+        final Handler handler
+                = new Handler();
+        // Call the post() method,
+        // passing in a new Runnable.
+        // The post() method processes
+        // code without a delay,
+        // so the code in the Runnable
+        // will run almost immediately.
+        handler.post(new Runnable() {
+            @SuppressLint("DefaultLocale")
+            @Override
+            public void run()
+            {
+                runSessionFragment.setSeconds(seconds);
+                updateRunFragmentView();
+                seconds++;
+                // Post the code again
+                // with a delay of 1 second.
+                handler.postDelayed(this, 1000);
+            }
+        });
+    }
+
+    private void updateRunFragmentView(){
+        if(runSessionFragment != null){
+            runSessionFragment.changeDistanceText();
+            runSessionFragment.changeTimerText();
         }
     }
 
@@ -198,6 +247,31 @@ public class BackgroundLocationService extends Service {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
         }catch (SecurityException e){
             Log.d(TAG, "Lost Location permission. Could not be requested " + e);
+        }
+        //start timer
+        runTimer();
+    }
+
+    public float getTotalDistance() {
+        return totalDistance;
+    }
+
+    public int getSeconds() {
+        return seconds;
+    }
+
+    public void setRunSessionFragment(RunSessionFragment runSessionFragment) {
+        this.runSessionFragment = runSessionFragment;
+    }
+
+    public void calculateDistance(){
+        if(previousLocation != null){
+            double startLat = previousLocation.getLatitude();
+            double startLng = previousLocation.getLongitude();
+            double endLat = currentLocation.getLatitude();
+            double endLng = currentLocation.getLongitude();
+            Location.distanceBetween(startLat,startLng,endLat,endLng,distance);
+            totalDistance += distance[0];
         }
     }
 
