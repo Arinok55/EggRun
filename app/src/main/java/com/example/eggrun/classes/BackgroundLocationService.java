@@ -145,9 +145,9 @@ public class BackgroundLocationService extends Service {
         currentLocation = lastLocation;
         EventBus.getDefault().postSticky(new SendLocationToActivity(currentLocation));
         //Update notification content if running as a foreground service
-        if(serviceIsRunningInForeGround(getApplicationContext())){
-            mNotificationManager.notify(NOTI_ID, getNotification());
-        }
+//        if(serviceIsRunningInForeGround(getApplicationContext())){
+//            mNotificationManager.notify(NOTI_ID, getNotification());
+//        }
     }
 
     @Override
