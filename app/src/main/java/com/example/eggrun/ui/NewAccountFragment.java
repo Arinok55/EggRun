@@ -59,11 +59,7 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         final int viewId = view.getId();
         if (viewId == R.id.create_account_button) {
-            try {
-                createAccount();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            createAccount();
         }
         else if (viewId == R.id.login_button) {
             Intent intent = new Intent(getActivity(), ChangeAccountActivity.class);
