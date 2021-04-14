@@ -25,6 +25,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 public class NewAccountFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "NewAccountFragment";
@@ -80,13 +82,13 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void createAccount() throws IOException {
+    private void createAccount() {
         Activity activity = getActivity();
         String username = mUsernameEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
         String confirm = mConfirmEditText.getText().toString();
 
-        if (password.equals(confirm) && !username.equals("") && !password.equals("") && password.length() >= 10) {
+        if (password.equals(confirm) && !username.equals("") && !password.equals("") && password.length() >= 10 && uniqueUsername(username)) {
             if (insertPlayer(username, password)) {
                 assert activity != null;
                 Toast.makeText(activity.getApplicationContext(), "New Account Created", Toast.LENGTH_SHORT).show();
@@ -105,30 +107,61 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
             assert activity != null;
             Toast.makeText(activity.getApplicationContext(), "Password and Confirm do not match", Toast.LENGTH_SHORT).show();
         }
-        else if (password.length() >= 10){
+        else if (password.length() < 10){
             assert activity != null;
             Toast.makeText(activity.getApplicationContext(), "Password is not at least 10 characters", Toast.LENGTH_SHORT).show();
+        }
+        else if(!uniqueUsername(username)){
+            assert activity != null;
+            Toast.makeText(activity.getApplicationContext(), "Username already exists", Toast.LENGTH_SHORT).show();
         }
         else{
             Toast.makeText(activity.getApplicationContext(), "An unknown account creation error occurred.", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private boolean insertPlayer(String name, String password) throws IOException {
+    private boolean insertPlayer(String name, String password) {
         Security sec = new Security();
         String playerHash = sec.getPassHash(name, password);
-
-        if (bus.hasFile(bus.getPlayerDirectory(), playerHash)){
-            return false;
-        }
         Player newPlayer = new Player(name, playerHash);
         bus.setPlayer(newPlayer);
 
-        File primaryPlayer = new File(bus.getMainDirectory(), "primaryPlayer");
-        ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(primaryPlayer));
-        output.writeObject(playerHash);
-        output.close();
+        try {
+            File primaryPlayer = new File(bus.getMainDirectory(), "primaryPlayer");
+            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(primaryPlayer));
+            output.writeObject(playerHash);
+            output.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return newPlayer.saveData();
+    }
+
+    private boolean uniqueUsername(String name){
+        if (bus.hasFile(bus.getMainDirectory(), "usernameSet")){
+            try{
+                ObjectInputStream input = new ObjectInputStream(new FileInputStream(bus.getFile(bus.getMainDirectory(), "usernameSet")));
+                Set<String> set = (Set<String>) input.readObject();
+                input.close();
+                return !set.contains(name);
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            try {
+                File setFile = new File(bus.getMainDirectory(), "usernameSet");
+                ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(setFile));
+                Set<String> set = new HashSet<String>();
+                set.add(name);
+                output.writeObject(set);
+                output.close();
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
     }
 }

@@ -9,21 +9,13 @@ import java.io.File;
 
 public class MainActivity extends SingleFragmentActivity {
     private static final String TAG = "MainActivity";
-    private MainActivityFragment mainActivityFragment;
 
     @Override
     protected Fragment createFragment() {
-        if (mainActivityFragment == null) {
-            Bus bus = Bus.getInstance();
-            String mAppDirectoryFilename = "EggRunDirectory";
-            File dir = new File(getApplicationContext().getFilesDir(), "EggRunDirectory");
-            if (!dir.isDirectory()){
-                dir.mkdir();
-            }
-            bus.setDirectory(dir);
-            Log.d(TAG, "Starting MainActivityFragment");
-            mainActivityFragment = new MainActivityFragment();
-        }
-        return mainActivityFragment;
+        Bus bus = Bus.getInstance();
+        File dir = new File(getApplicationContext().getFilesDir(), "EggRunDirectory");
+        bus.setDirectory(dir);
+        Log.d(TAG, "Starting MainActivityFragment");
+        return new MainActivityFragment();
     }
 }

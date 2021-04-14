@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.Set;
 
 public class DeleteAccountFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "DeleteAccountFragment";
@@ -98,6 +99,19 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
         if (bus.hasFile(bus.getPlayerDirectory(), hash)){
             File deleteThis = bus.getFile(bus.getPlayerDirectory(), hash);
             deleteThis.delete();
+
+            try {
+                ObjectInputStream input = new ObjectInputStream(new FileInputStream(bus.getFile(bus.getMainDirectory(), "usernameSet")));
+                Set<String> nameSet = (Set<String>) input.readObject();
+                nameSet.remove(name);
+                input.close();
+
+                ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(bus.getFile(bus.getMainDirectory(), "usernameSet")));
+                output.writeObject(nameSet);
+                output.close();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
 
             if (bus.getPlayer().getName().equals(name)){
                 bus.removePlayer();

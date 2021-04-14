@@ -1,9 +1,12 @@
 package com.example.eggrun.classes;
 
+import android.util.Log;
+
 import java.io.File;
 import java.io.Serializable;
 
 public class Bus implements Serializable {
+    private final String TAG = "Bus Object";
     private static final Bus instance = new Bus();
     private File mainDirectory;
     private File playerDirectory;
@@ -36,6 +39,12 @@ public class Bus implements Serializable {
         if (!mainDirectory.isDirectory())
         {
             mainDirectory.mkdir();
+            Log.d(TAG, "creating mainDirectory as a directory");
+            File deleteThis = new File(mainDirectory, "usernameSet");
+            if(deleteThis.exists()){
+                Log.d(TAG, "Deleting "+deleteThis.toString());
+                deleteThis.delete();
+            }
         }
 
         if (hasFile(mainDirectory, "playerDirectory")){
@@ -44,6 +53,7 @@ public class Bus implements Serializable {
         else {
             playerDirectory = new File(mainDirectory, "playerDirectory");
             playerDirectory.mkdir();
+            Log.d(TAG, "creating playerDirectory as a directory");
         }
         return true;
     }
@@ -57,6 +67,10 @@ public class Bus implements Serializable {
     }
 
     public boolean hasFile(File directory, String fileName){
+        if (directory == null){
+            return false;
+        }
+
         File[] files = directory.listFiles();
         for (File file : files){
             if (file.getName().equals(fileName)){
