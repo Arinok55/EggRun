@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.example.eggrun.R;
 import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
+import com.example.eggrun.classes.Security;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,11 +30,10 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
 
-    private final File mGameDirectory;
     private final Bus bus = Bus.getInstance();
 
-    public DeleteAccountFragment(File directory){
-        mGameDirectory = directory;
+    public DeleteAccountFragment(){
+
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,11 +55,7 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
     public void onClick(View view) {
         final int viewId = view.getId();
         if (viewId == R.id.delete_account_button) {
-            try {
-                deleteAccount();
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            deleteAccount();
         } else if(viewId == R.id.cancel_button){
             Activity activity = getActivity();
             assert activity != null;
@@ -70,7 +66,7 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
         }
     }
 
-    private void deleteAccount() throws IOException, ClassNotFoundException {
+    private void deleteAccount() {
         Activity activity = getActivity();
         String username = mUsernameEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
@@ -95,21 +91,18 @@ public class DeleteAccountFragment extends Fragment implements View.OnClickListe
         }
     }
 
-    private boolean deletePlayer(String name, String password) throws IOException, ClassNotFoundException {
-        ObjectInputStream input;
-        File[] GameFiles = mGameDirectory.listFiles();
-        for (File gameFile : GameFiles) {
-            input = new ObjectInputStream(new FileInputStream(gameFile));
-            Player player = (Player) input.readObject();
-            if (player.getName().equals(name) && player.getPassword().equals(password)){
-                input.close();
+    private boolean deletePlayer(String name, String password) {
+        Security sec = new Security();
+        String hash = sec.getPassHash(name, password);
 
-                if (bus.getPlayer().getName().equals(name)){
-                    bus.removePlayer();
-                }
-                return gameFile.delete();
+        if (bus.hasFile(bus.getPlayerDirectory(), hash)){
+            File deleteThis = bus.getFile(bus.getPlayerDirectory(), hash);
+            deleteThis.delete();
+
+            if (bus.getPlayer().getName().equals(name)){
+                bus.removePlayer();
             }
-            input.close();
+            return true;
         }
         return false;
     }

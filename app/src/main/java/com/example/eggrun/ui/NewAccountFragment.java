@@ -16,9 +16,11 @@ import androidx.fragment.app.Fragment;
 import com.example.eggrun.R;
 import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
+import com.example.eggrun.classes.Security;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -30,11 +32,8 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
     private EditText mPasswordEditText;
     private EditText mConfirmEditText;
 
-    private File mDirectory;
+    private Bus bus = Bus.getInstance();
 
-    public NewAccountFragment(File directory){
-        mDirectory = directory;
-    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreate()");
@@ -58,11 +57,14 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         final int viewId = view.getId();
         if (viewId == R.id.create_account_button) {
-            createAccount();
+            try {
+                createAccount();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         else if (viewId == R.id.login_button) {
             Intent intent = new Intent(getActivity(), ChangeAccountActivity.class);
-            intent.putExtra("directory", mDirectory);
             startActivity(intent);
             Activity activity = getActivity();
             assert activity != null;
@@ -78,15 +80,14 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void createAccount(){
+    private void createAccount() throws IOException {
         Activity activity = getActivity();
         String username = mUsernameEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
         String confirm = mConfirmEditText.getText().toString();
 
-        if (password.equals(confirm) && !username.equals("") && !password.equals("")) {
-            Player player = new Player(username, password);
-            if (insertPlayer(player)) {
+        if (password.equals(confirm) && !username.equals("") && !password.equals("") && password.length() >= 10) {
+            if (insertPlayer(username, password)) {
                 assert activity != null;
                 Toast.makeText(activity.getApplicationContext(), "New Account Created", Toast.LENGTH_SHORT).show();
                 activity.finish();
@@ -104,55 +105,30 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
             assert activity != null;
             Toast.makeText(activity.getApplicationContext(), "Password and Confirm do not match", Toast.LENGTH_SHORT).show();
         }
+        else if (password.length() >= 10){
+            assert activity != null;
+            Toast.makeText(activity.getApplicationContext(), "Password is not at least 10 characters", Toast.LENGTH_SHORT).show();
+        }
         else{
             Toast.makeText(activity.getApplicationContext(), "An unknown account creation error occurred.", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private boolean insertPlayer(Player newPlayer){
-        ObjectInputStream input;
-        ObjectOutputStream output;
+    private boolean insertPlayer(String name, String password) throws IOException {
+        Security sec = new Security();
+        String playerHash = sec.getPassHash(name, password);
 
-        File[] GameFiles = mDirectory.listFiles();
-        for (File gameFile : GameFiles) {
-            if (gameFile.isFile()) {
-                try {
-                    input = new ObjectInputStream(new FileInputStream(gameFile));
-                    Player player = (Player) input.readObject();
-
-                    if (player.getName().equals(newPlayer.getName())) {
-                        return false;
-                    }
-                    input.close();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
+        if (bus.hasFile(bus.getPlayerDirectory(), playerHash)){
+            return false;
         }
+        Player newPlayer = new Player(name, playerHash);
+        bus.setPlayer(newPlayer);
 
-        try{
-            makePrimaryAccount(newPlayer.getName());
-            output = new ObjectOutputStream(new FileOutputStream(new File(mDirectory, newPlayer.getName())));
-            output.writeObject(newPlayer);
-            Log.d(TAG, "Writing player object");
-            output.close();
+        File primaryPlayer = new File(bus.getMainDirectory(), "primaryPlayer");
+        ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(primaryPlayer));
+        output.writeObject(playerHash);
+        output.close();
 
-            Bus bus = Bus.getInstance();
-            bus.setPlayer(newPlayer);
-
-        } catch(IOException | ClassNotFoundException e){e.printStackTrace();}
-        return true;
-    }
-
-    private void makePrimaryAccount(String name) throws IOException, ClassNotFoundException {
-        ObjectInputStream input;
-        File[] GameFiles = mDirectory.listFiles();
-        for (File gameFile : GameFiles) {
-            input = new ObjectInputStream(new FileInputStream(gameFile));
-            Player player = (Player) input.readObject();
-            if (!player.getName().equals(name)){
-                player.removePrimary();
-            }
-        }
+        return newPlayer.saveData();
     }
 }
