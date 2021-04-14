@@ -12,6 +12,7 @@ import android.widget.Button;
 import androidx.fragment.app.Fragment;
 
 import com.example.eggrun.R;
+import com.example.eggrun.classes.Bus;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -19,11 +20,7 @@ import java.io.File;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "SettingsFragment";
-    private File mAppDirectory;
-
-    public SettingsFragment(File directory) {
-        mAppDirectory = directory;
-    }
+    private Bus bus = Bus.getInstance();
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,15 +45,18 @@ public class SettingsFragment extends Fragment implements View.OnClickListener{
 
         if (viewId == R.id.new_account_button) {
             Log.d(TAG, "Opening NewAccountActivity");
-            createDirectoryActivity(NewAccountActivity.class);
+            Intent intent = new Intent(getActivity(), NewAccountActivity.class);
+            startActivity(intent);
         }
         else if (viewId == R.id.login_button){
             Log.d(TAG, "Opening ChangeAccountActivity");
-            createDirectoryActivity(ChangeAccountActivity.class);
+            Intent intent = new Intent(getActivity(), ChangeAccountActivity.class);
+            startActivity(intent);
         }
         else if (viewId == R.id.delete_account_button){
             Log.d(TAG, "Opening DeleteAccountActivity");
-            createDirectoryActivity(DeleteAccountActivity.class);
+            Intent intent = new Intent(getActivity(), DeleteAccountActivity.class);
+            startActivity(intent);
         }
         else if (viewId == R.id.cancel_button){
             Log.d(TAG, "Closing SettingsActivity");
@@ -67,11 +67,5 @@ public class SettingsFragment extends Fragment implements View.OnClickListener{
         else{
             Log.d(TAG, "Error: Invalid button click");
         }
-    }
-
-    private void createDirectoryActivity(Class<?> classActivity){
-        Intent intent = new Intent(getActivity(), classActivity);
-        intent.putExtra("directory", mAppDirectory);
-        startActivity(intent);
     }
 }

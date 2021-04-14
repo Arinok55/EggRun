@@ -11,28 +11,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Player implements Serializable {
-    private String mName;
-    private String mPassword;
-    private File mDirectory;
-    private boolean mPrimaryProfile = true;
+    private final String mName;
+    private final String mFileName;
+    private final Bus bus = Bus.getInstance();
 
     private ArrayList<Egg> mEggList;
     private ArrayList<Pet> mPetList;
 
-    public Player(String name, String password) {
+    public Player(String name, String fileName) {
         mName = name;
-        mPassword = password;
+        mFileName = fileName;
         mEggList = new ArrayList<>();
         mPetList = new ArrayList<>();
-        saveData();
     }
 
     public String getName(){
         return mName;
-    }
-
-    public String getPassword(){
-        return mPassword;
     }
 
     public ArrayList<Egg> getEggList(){
@@ -58,38 +52,16 @@ public class Player implements Serializable {
         return saveData();
     }
 
-    public boolean setPrimary() {
-        mPrimaryProfile = true;
-        return saveData();
-    }
-
-    public boolean removePrimary() {
-        mPrimaryProfile = false;
-        return saveData();
-    }
-
-    public boolean isPrimary() {
-        return mPrimaryProfile;
-    }
-
-    public void setDirectory(File directory){
-        mDirectory = directory;
-    }
 
     public boolean saveData() {
-        if(mDirectory != null && mDirectory.isDirectory()) {
-            try {
-                ObjectOutputStream output;
-                output = new ObjectOutputStream(new FileOutputStream(new File(mDirectory, mName)));
-                output.writeObject(this);
-                output.close();
-                return true;
-            }
-            catch (IOException e){
-                return false;
-            }
+        try {
+            ObjectOutputStream output;
+            output = new ObjectOutputStream(new FileOutputStream(new File(bus.getPlayerDirectory(), mFileName)));
+            output.writeObject(this);
+            output.close();
+            return true;
         }
-        else{
+        catch (IOException e){
             return false;
         }
     }

@@ -1,6 +1,5 @@
 package com.example.eggrun.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,10 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
-
 
 import com.example.eggrun.R;
 import com.example.eggrun.classes.BackgroundLocationService;
@@ -22,17 +19,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class MainActivityFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "MainActivityFragment";
-    private final File mAppDirectory;
     private Bus mBus = Bus.getInstance();
-
-    public MainActivityFragment(File appDirectory) {
-        mAppDirectory = appDirectory;
-    }
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,16 +64,18 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         else {
             if (viewId == R.id.hatchButton) {
                 Log.d(TAG, "opening AddEggActivity");
-                createNewActivity(AddEggActivity.class);
+                Intent intent = new Intent(getActivity(), AddEggActivity.class);
+                startActivity(intent);
             } else if (viewId == R.id.currentButton) {
                 Log.d(TAG, "opening CurrentEggActivity");
-                createNewActivity(CurrentEggActivity.class);
+                Intent intent = new Intent(getActivity(), CurrentEggActivity.class);
+                startActivity(intent);
             } else if (viewId == R.id.petsButton) {
-                createNewActivity(PetActivity.class);
+                Intent intent = new Intent(getActivity(), PetActivity.class);
+                startActivity(intent);
             } else if (viewId == R.id.optionsButton) {
                 Log.d(TAG, "opening SettingsActivity");
                 Intent intent = new Intent(getActivity(), SettingsActivity.class);
-                intent.putExtra("directory", mAppDirectory);
                 startActivity(intent);
             } else {
                 Log.d(TAG, "Error: Invalid button click");
@@ -91,7 +87,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     public void onStart(){
         super.onStart();
         Log.d(TAG, "onStart()");
-        Log.d(TAG, "Serivce is " + BackgroundLocationService.getInstance());
+        Log.d(TAG, "Service is " + BackgroundLocationService.getInstance());
         try {
             getPrimaryPlayer();
         } catch (IOException | ClassNotFoundException e) {
@@ -106,36 +102,30 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private boolean getPrimaryPlayer() throws IOException, ClassNotFoundException {
-        ObjectInputStream input;
-        Player player;
-        File[] appFiles = mAppDirectory.listFiles();
+    private void openNewAccount() throws IOException, ClassNotFoundException {
+        if (!getPrimaryPlayer()) {
+            Log.d(TAG, "Opening new account activity");
+            Intent intent = new Intent(getActivity(), NewAccountActivity.class);
+            startActivity(intent);
+        }
+    }
 
-        for (File appFile : appFiles) {
-            input = new ObjectInputStream(new FileInputStream(appFile));
-            player = (Player) input.readObject();
-            if (player.isPrimary()) {
-                mBus.setPlayer(player);
-                mBus.getPlayer().setDirectory(mAppDirectory);
+    private boolean getPrimaryPlayer() throws IOException, ClassNotFoundException {
+        if (mBus.hasFile(mBus.getMainDirectory(), "primaryPlayer")) {
+            File primaryPlayer = mBus.getFile(mBus.getMainDirectory(), "primaryPlayer");
+            ObjectInputStream input = new ObjectInputStream(new FileInputStream(primaryPlayer));
+            String playerHash = (String) input.readObject();
+
+            if (mBus.hasFile(mBus.getPlayerDirectory(), playerHash)){
+                File player = mBus.getFile(mBus.getPlayerDirectory(), playerHash);
+                ObjectInputStream inputPlayer = new ObjectInputStream(new FileInputStream(player));
+                mBus.setPlayer((Player) inputPlayer.readObject());
+                inputPlayer.close();
                 input.close();
                 return true;
             }
             input.close();
         }
         return false;
-    }
-
-    private void openNewAccount() throws IOException, ClassNotFoundException {
-        if (!getPrimaryPlayer()) {
-            Log.d(TAG, "Opening new account activity");
-            Intent intent = new Intent(getActivity(), NewAccountActivity.class);
-            intent.putExtra("directory", mAppDirectory);
-            startActivity(intent);
-        }
-    }
-
-    public void createNewActivity(Class<?> activity){
-        Intent intent = new Intent(getActivity(), activity);
-        startActivity(intent);
     }
 }

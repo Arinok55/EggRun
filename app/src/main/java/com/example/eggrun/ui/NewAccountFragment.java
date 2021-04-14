@@ -16,13 +16,17 @@ import androidx.fragment.app.Fragment;
 import com.example.eggrun.R;
 import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
+import com.example.eggrun.classes.Security;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 public class NewAccountFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "NewAccountFragment";
@@ -30,11 +34,8 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
     private EditText mPasswordEditText;
     private EditText mConfirmEditText;
 
-    private File mDirectory;
+    private Bus bus = Bus.getInstance();
 
-    public NewAccountFragment(File directory){
-        mDirectory = directory;
-    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreate()");
@@ -62,7 +63,6 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
         }
         else if (viewId == R.id.login_button) {
             Intent intent = new Intent(getActivity(), ChangeAccountActivity.class);
-            intent.putExtra("directory", mDirectory);
             startActivity(intent);
             Activity activity = getActivity();
             assert activity != null;
@@ -78,15 +78,14 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void createAccount(){
+    private void createAccount() {
         Activity activity = getActivity();
         String username = mUsernameEditText.getText().toString();
         String password = mPasswordEditText.getText().toString();
         String confirm = mConfirmEditText.getText().toString();
 
-        if (password.equals(confirm) && !username.equals("") && !password.equals("")) {
-            Player player = new Player(username, password);
-            if (insertPlayer(player)) {
+        if (password.equals(confirm) && !username.equals("") && !password.equals("") && password.length() >= 10 && uniqueUsername(username)) {
+            if (insertPlayer(username, password)) {
                 assert activity != null;
                 Toast.makeText(activity.getApplicationContext(), "New Account Created", Toast.LENGTH_SHORT).show();
                 activity.finish();
@@ -104,55 +103,61 @@ public class NewAccountFragment extends Fragment implements View.OnClickListener
             assert activity != null;
             Toast.makeText(activity.getApplicationContext(), "Password and Confirm do not match", Toast.LENGTH_SHORT).show();
         }
+        else if (password.length() < 10){
+            assert activity != null;
+            Toast.makeText(activity.getApplicationContext(), "Password is not at least 10 characters", Toast.LENGTH_SHORT).show();
+        }
+        else if(!uniqueUsername(username)){
+            assert activity != null;
+            Toast.makeText(activity.getApplicationContext(), "Username already exists", Toast.LENGTH_SHORT).show();
+        }
         else{
             Toast.makeText(activity.getApplicationContext(), "An unknown account creation error occurred.", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private boolean insertPlayer(Player newPlayer){
-        ObjectInputStream input;
-        ObjectOutputStream output;
+    private boolean insertPlayer(String name, String password) {
+        Security sec = new Security();
+        String playerHash = sec.getPassHash(name, password);
+        Player newPlayer = new Player(name, playerHash);
+        bus.setPlayer(newPlayer);
 
-        File[] GameFiles = mDirectory.listFiles();
-        for (File gameFile : GameFiles) {
-            if (gameFile.isFile()) {
-                try {
-                    input = new ObjectInputStream(new FileInputStream(gameFile));
-                    Player player = (Player) input.readObject();
-
-                    if (player.getName().equals(newPlayer.getName())) {
-                        return false;
-                    }
-                    input.close();
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
+        try {
+            File primaryPlayer = new File(bus.getMainDirectory(), "primaryPlayer");
+            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(primaryPlayer));
+            output.writeObject(playerHash);
+            output.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        try{
-            makePrimaryAccount(newPlayer.getName());
-            output = new ObjectOutputStream(new FileOutputStream(new File(mDirectory, newPlayer.getName())));
-            output.writeObject(newPlayer);
-            Log.d(TAG, "Writing player object");
-            output.close();
-
-            Bus bus = Bus.getInstance();
-            bus.setPlayer(newPlayer);
-
-        } catch(IOException | ClassNotFoundException e){e.printStackTrace();}
-        return true;
+        return newPlayer.saveData();
     }
 
-    private void makePrimaryAccount(String name) throws IOException, ClassNotFoundException {
-        ObjectInputStream input;
-        File[] GameFiles = mDirectory.listFiles();
-        for (File gameFile : GameFiles) {
-            input = new ObjectInputStream(new FileInputStream(gameFile));
-            Player player = (Player) input.readObject();
-            if (!player.getName().equals(name)){
-                player.removePrimary();
+    private boolean uniqueUsername(String name){
+        if (bus.hasFile(bus.getMainDirectory(), "usernameSet")){
+            try{
+                ObjectInputStream input = new ObjectInputStream(new FileInputStream(bus.getFile(bus.getMainDirectory(), "usernameSet")));
+                Set<String> set = (Set<String>) input.readObject();
+                input.close();
+                return !set.contains(name);
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
             }
         }
+        else{
+            try {
+                File setFile = new File(bus.getMainDirectory(), "usernameSet");
+                ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(setFile));
+                Set<String> set = new HashSet<String>();
+                set.add(name);
+                output.writeObject(set);
+                output.close();
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
     }
 }

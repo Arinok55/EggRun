@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.example.eggrun.R;
 import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
+import com.example.eggrun.classes.Security;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,13 +30,7 @@ public class ChangeAccountFragment extends Fragment implements View.OnClickListe
     private static final String TAG = "ChangeAccountFragment";
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
-
-    private final File mDirectory;
     private final Bus bus = Bus.getInstance();
-
-    public ChangeAccountFragment(File directory){
-        mDirectory = directory;
-    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "onCreate()");
@@ -66,7 +61,6 @@ public class ChangeAccountFragment extends Fragment implements View.OnClickListe
         }
         else if (viewId == R.id.create_account_button) {
             Intent intent = new Intent(getActivity(), NewAccountActivity.class);
-            intent.putExtra("directory", mDirectory);
             startActivity(intent);
             Activity activity = getActivity();
             assert activity != null;
@@ -108,34 +102,21 @@ public class ChangeAccountFragment extends Fragment implements View.OnClickListe
     }
 
     private boolean loginPlayer(String name, String password) throws IOException, ClassNotFoundException {
-        ObjectInputStream input;
-        File[] GameFiles = mDirectory.listFiles();
-        for (File gameFile : GameFiles) {
-            input = new ObjectInputStream(new FileInputStream(gameFile));
+        Security sec = new Security();
+        String playerHash = sec.getPassHash(name, password);
+
+        if (bus.hasFile(bus.getPlayerDirectory(), playerHash)){
+            File playerFile = bus.getFile(bus.getPlayerDirectory(), playerHash);
+            ObjectInputStream input = new ObjectInputStream(new FileInputStream(playerFile));
             Player player = (Player) input.readObject();
-            if (player.getName().equals(name) && player.getPassword().equals(password)){
-                player.setPrimary();
-                Bus bus = Bus.getInstance();
-                bus.setPlayer(player);
-                makePrimaryAccount(name);
-                input.close();
-                return true;
-            }
-            input.close();
+
+            bus.setPlayer(player);
+            File primaryPlayer = new File(bus.getMainDirectory(), "primaryPlayer");
+            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(primaryPlayer));
+            output.writeObject(playerHash);
+            output.close();
+            return true;
         }
         return false;
-    }
-
-    private void makePrimaryAccount(String name) throws IOException, ClassNotFoundException {
-        ObjectInputStream input;
-        File[] GameFiles = mDirectory.listFiles();
-        for (File gameFile : GameFiles) {
-            input = new ObjectInputStream(new FileInputStream(gameFile));
-            Player player = (Player) input.readObject();
-            if (!player.getName().equals(name)){
-                player.removePrimary();
-            }
-            input.close();
-        }
     }
 }
