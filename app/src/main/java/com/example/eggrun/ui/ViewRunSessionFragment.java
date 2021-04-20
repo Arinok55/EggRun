@@ -1,16 +1,19 @@
 package com.example.eggrun.ui;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.eggrun.R;
+import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.RunSession;
 
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +22,8 @@ import java.util.Locale;
 
 public class ViewRunSessionFragment extends Fragment {
     private static final String TAG = "ViewRunSessionFragment";
-    RunSession mRunSession;
+    private static Bus bus = Bus.getInstance();
+    private RunSession mRunSession;
 
     public ViewRunSessionFragment(RunSession runSession) {
         mRunSession = runSession;
@@ -46,6 +50,15 @@ public class ViewRunSessionFragment extends Fragment {
         TextView average_speed_display = view.findViewById(R.id.average_speed_display);
         double mph = mRunSession.getAvgSpeed() * 60 * 60;
         average_speed_display.setText(String.format("%.2f", mph) + " mph");
+
+        if (bus.isDarkModeActive()){
+            view.getRootView().setBackgroundColor(Color.BLACK);
+            ImageView imageView = view.findViewById(R.id.egg_Run_Title);
+            imageView.setImageResource(R.drawable.egg_run_title_dark);
+            distance_view_display.setTextColor(Color.WHITE);
+            time_view_display.setTextColor(Color.WHITE);
+            average_speed_display.setTextColor(Color.WHITE);
+        }
 
         return view;
     }

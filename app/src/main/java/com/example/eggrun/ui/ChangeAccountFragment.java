@@ -2,6 +2,7 @@ package com.example.eggrun.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -45,6 +48,20 @@ public class ChangeAccountFragment extends Fragment implements View.OnClickListe
         createAccountButton.setOnClickListener(this);
         Button cancelButton = view.findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(this);
+
+        if (bus.isDarkModeActive()){
+            view.setBackgroundColor(Color.BLACK);
+            TextView text = view.findViewById(R.id.login_text);
+            text.setTextColor(Color.WHITE);
+            text = view.findViewById(R.id.username);
+            text.setTextColor(Color.WHITE);
+            mUsernameEditText.setTextColor(Color.WHITE);
+            text = view.findViewById(R.id.password);
+            text.setTextColor(Color.WHITE);
+            mPasswordEditText.setTextColor(Color.WHITE);
+            text = view.findViewById(R.id.or_text);
+            text.setTextColor(Color.WHITE);
+        }
 
         return view;
     }

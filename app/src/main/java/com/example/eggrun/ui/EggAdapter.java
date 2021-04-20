@@ -49,6 +49,9 @@ public class EggAdapter extends RecyclerView.Adapter<EggAdapter.ViewHolder>{
 
         if (egg.canHatch()){
             viewHolder.textView.setText("Ready");
+            if (bus.isDarkModeActive()) {
+                viewHolder.textView.setTextColor(Color.WHITE);
+            }
             viewHolder.textButton.setOnClickListener(v -> {
                 Log.d(TAG, "Opening HatchEggActivity.");
                 Intent intent = new Intent(mContext.getApplicationContext(), HatchEggActivity.class);
@@ -61,6 +64,9 @@ public class EggAdapter extends RecyclerView.Adapter<EggAdapter.ViewHolder>{
         }
         else {
             viewHolder.textView.setText(String.format("%.2f", egg.DistanceToHatch()) + " miles");
+            if (bus.isDarkModeActive()) {
+                viewHolder.textView.setTextColor(Color.WHITE);
+            }
             viewHolder.textButton.setOnClickListener(v -> {
                 Log.d(TAG, "Opening test_egg_hatch_fragment.");
                 //run session goes here egg hatch

@@ -2,6 +2,7 @@ package com.example.eggrun.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eggrun.R;
+import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
 import com.example.eggrun.classes.RunSession;
 import com.example.eggrun.classes.pet.Pet;
@@ -23,11 +25,12 @@ import java.util.ArrayList;
 
 public class RunSessionAdapter extends RecyclerView.Adapter<RunSessionAdapter.ViewHolder>{
     private static final String TAG = "RunSessionAdapter";
+    private Bus bus = Bus.getInstance();
     private Context mContext;
     private Pet mPet;
 
     public RunSessionAdapter(Pet pet){
-        Log.d(TAG, "creating new PetAdapter");
+        Log.d(TAG, "creating new RunSessionAdapter");
         mPet = pet;
     }
 
@@ -45,6 +48,9 @@ public class RunSessionAdapter extends RecyclerView.Adapter<RunSessionAdapter.Vi
         ArrayList<RunSession> runSessionList = (ArrayList<RunSession>) mPet.getRunSessionList();
         RunSession runSession = runSessionList.get(position);
         viewHolder.textView.setText(runSession.getDate().toString());
+        if (bus.isDarkModeActive()){
+            viewHolder.textView.setTextColor(Color.WHITE);
+        }
         viewHolder.textButton.setOnClickListener(v -> {
             Log.d(TAG, "Opening ViewRunSessionActivity.");
             Intent intent = new Intent(mContext.getApplicationContext(), ViewRunSessionActivity.class);

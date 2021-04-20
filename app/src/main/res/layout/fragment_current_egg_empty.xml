@@ -4,16 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="100sp">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="0dp">
 
         <ImageView
-            android:id="@+id/eggRunTitle"
+            android:id="@+id/egg_Run_Title"
             android:layout_width="match_parent"
             android:layout_height="@dimen/title_height"
             android:contentDescription="@string/Title"
@@ -26,8 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/no_eggs"
-            android:textSize="80sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black"
+            android:textSize="80sp" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

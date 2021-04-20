@@ -1,14 +1,14 @@
 package com.example.eggrun.ui;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,15 +17,10 @@ import androidx.fragment.app.Fragment;
 import com.example.eggrun.R;
 import com.example.eggrun.classes.BackgroundLocationService;
 import com.example.eggrun.classes.Bus;
-import com.example.eggrun.classes.Player;
 import com.example.eggrun.classes.RunSession;
 import com.example.eggrun.classes.egg.Egg;
-import com.example.eggrun.classes.egg.EggFactory;
-
-import org.w3c.dom.Text;
 
 import java.util.Locale;
-import java.util.Objects;
 
 public class RunSessionFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "RunSessionFragment";
@@ -33,7 +28,6 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
     BackgroundLocationService backgroundLocationService;
     private static Bus bus = Bus.getInstance();
     private Egg mEgg;
-    private boolean eggAdded = false;
 
     //distance ran
     private float distance;
@@ -60,17 +54,27 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
         changeTimerText();
         Button endRunButton = view.findViewById(R.id.endRunButton);
         endRunButton.setOnClickListener(this);
+
+        if (bus.isDarkModeActive()){
+            view.setBackgroundColor(Color.BLACK);
+
+            TextView text = view.findViewById(R.id.timeText);
+            text.setTextColor(Color.WHITE);
+            timerText.setTextColor(Color.WHITE);
+            text = view.findViewById(R.id.distanceText);
+            text.setTextColor(Color.WHITE);
+            distanceText.setTextColor(Color.WHITE);
+        }
+
         return view;
     }
 
     public void onClick(View view) {
         final int viewId = view.getId();
         if(viewId == R.id.endRunButton){
-            eggAdded = addData(mEgg, distance);
+            addData(mEgg, distance);
             backgroundLocationService.removeLocationUpdates();
-
         }
-
     }
 
     public void setSeconds(int seconds) {
@@ -115,27 +119,6 @@ public class RunSessionFragment extends Fragment implements View.OnClickListener
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.d(TAG,"onSaveInstanceState");
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        Log.d(TAG, "onStop()");
-        if (!eggAdded) {
-            addData(mEgg, distance);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG,"Resuming run frag");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG,"Destroying run frag");
     }
 
     public void setBackgroundLocationService(BackgroundLocationService backgroundLocationService) {
