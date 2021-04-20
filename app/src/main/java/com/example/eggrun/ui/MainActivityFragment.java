@@ -2,6 +2,7 @@ package com.example.eggrun.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,7 +58,6 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
             ImageView title = view.findViewById(R.id.egg_Run_Title);
             title.setImageResource(R.drawable.egg_run_title_dark);
         }
-
         return view;
     }
 
