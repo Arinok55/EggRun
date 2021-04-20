@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:screenOrientation="portrait"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,29 +16,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EggRun">
-        <activity android:name=".ui.SplashScreenActivity">
+        <activity android:name=".ui.SplashScreenActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.example.eggrun.main" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.NewAccountActivity"/>
-        <activity android:name=".ui.AddEggActivity"/>
-        <activity android:name=".ui.CurrentEggActivity"/>
-        <activity android:name=".ui.HatchEggActivity"/>
-        <activity android:name=".ui.PetActivity"/>
-        <activity android:name=".ui.ViewPetActivity"/>
-        <activity android:name=".ui.SettingsActivity"/>
-        <activity android:name=".ui.ChangeAccountActivity"/>
-        <activity android:name=".ui.DeleteAccountActivity"/>
-        <activity android:name=".ui.RunSessionActivity"/>
-        <activity android:name=".ui.ViewRunSessionActivity"/>
+        <activity android:name=".ui.NewAccountActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.AddEggActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.CurrentEggActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.HatchEggActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.PetActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.ViewPetActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.SettingsActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.ChangeAccountActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.DeleteAccountActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.RunSessionActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.ViewRunSessionActivity" android:screenOrientation="portrait"/>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -49,7 +48,8 @@
         <service android:name=".classes.BackgroundLocationService"
             android:enabled="true"
             android:exported="true"
-            android:foregroundServiceType="location"/>
+            android:foregroundServiceType="location"
+            />
 
     </application>
 </manifest>
