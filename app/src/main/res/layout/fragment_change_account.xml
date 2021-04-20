@@ -13,7 +13,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/login_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -22,7 +22,7 @@
             android:textColor="@color/black"/>
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -44,6 +44,7 @@
             tools:ignore="LabelFor" />
 
         <TextView
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
@@ -74,7 +75,7 @@
             android:text="@string/login" />
 
         <TextView
-            android:id="@+id/or"
+            android:id="@+id/or_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/or"

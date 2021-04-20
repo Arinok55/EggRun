@@ -1,23 +1,18 @@
 package com.example.eggrun.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eggrun.R;
 import com.example.eggrun.classes.Bus;
-import com.example.eggrun.classes.Player;
-import com.example.eggrun.classes.egg.Egg;
 import com.example.eggrun.classes.pet.Pet;
 
 import org.jetbrains.annotations.NotNull;

@@ -1,12 +1,15 @@
 package com.example.eggrun.ui;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 
@@ -26,7 +29,8 @@ import java.io.ObjectOutputStream;
 
 public class MainActivityFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "MainActivityFragment";
-    private Bus mBus = Bus.getInstance();
+    private Bus bus = Bus.getInstance();
+    private View view;
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,7 +42,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
             e.printStackTrace();
         }
 
-        View view = inflater.inflate(R.layout.fragment_main_activity, container, false);
+        view = inflater.inflate(R.layout.fragment_main_activity, container, false);
         Button hatchNewEggButton = view.findViewById(R.id.hatchButton);
         hatchNewEggButton.setOnClickListener(this);
         Button currentEggButton = view.findViewById(R.id.currentButton);
@@ -48,13 +52,19 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         Button optionsButton = view.findViewById(R.id.optionsButton);
         optionsButton.setOnClickListener(this);
 
+        if (bus.isDarkModeActive()){
+            view.setBackgroundColor(Color.BLACK);
+            ImageView title = view.findViewById(R.id.egg_Run_Title);
+            title.setImageResource(R.drawable.egg_run_title_dark);
+        }
+
         return view;
     }
 
     public void onClick(View view) {
         final int viewId = view.getId();
 
-        if (!mBus.hasPlayer()) {
+        if (!bus.hasPlayer()) {
             try {
                 openNewAccount();
             } catch (IOException | ClassNotFoundException e) {
@@ -98,7 +108,17 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
             intent.putExtra("position", BackgroundLocationService.getInstance().getEggPostion());
             requireActivity().finish();
             this.getContext().startActivity(intent);
+        }
 
+        if (bus.isDarkModeActive()){
+            view.setBackgroundColor(Color.BLACK);
+            ImageView title = view.findViewById(R.id.egg_Run_Title);
+            title.setImageResource(R.drawable.egg_run_title_dark);
+        }
+        else {
+            view.setBackgroundColor(Color.WHITE);
+            ImageView title = view.findViewById(R.id.egg_Run_Title);
+            title.setImageResource(R.drawable.egg_run_title);
         }
     }
 
@@ -111,15 +131,15 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     }
 
     private boolean getPrimaryPlayer() throws IOException, ClassNotFoundException {
-        if (mBus.hasFile(mBus.getMainDirectory(), "primaryPlayer")) {
-            File primaryPlayer = mBus.getFile(mBus.getMainDirectory(), "primaryPlayer");
+        if (bus.hasFile(bus.getMainDirectory(), "primaryPlayer")) {
+            File primaryPlayer = bus.getFile(bus.getMainDirectory(), "primaryPlayer");
             ObjectInputStream input = new ObjectInputStream(new FileInputStream(primaryPlayer));
             String playerHash = (String) input.readObject();
 
-            if (mBus.hasFile(mBus.getPlayerDirectory(), playerHash)){
-                File player = mBus.getFile(mBus.getPlayerDirectory(), playerHash);
+            if (bus.hasFile(bus.getPlayerDirectory(), playerHash)){
+                File player = bus.getFile(bus.getPlayerDirectory(), playerHash);
                 ObjectInputStream inputPlayer = new ObjectInputStream(new FileInputStream(player));
-                mBus.setPlayer((Player) inputPlayer.readObject());
+                bus.setPlayer((Player) inputPlayer.readObject());
                 inputPlayer.close();
                 input.close();
                 return true;

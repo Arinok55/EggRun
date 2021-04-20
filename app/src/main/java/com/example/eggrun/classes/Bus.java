@@ -11,6 +11,7 @@ public class Bus implements Serializable {
     private File mainDirectory;
     private File playerDirectory;
     private Player mPlayer = null;
+    private boolean darkMode = false;
 
     private Bus(){}
 
@@ -88,5 +89,16 @@ public class Bus implements Serializable {
             }
         }
         return null;
+    }
+
+    public void switchDarkMode(){
+        mPlayer.switchDarkMode();
+    }
+
+    public boolean isDarkModeActive(){
+        if (mPlayer == null){
+            return false;
+        }
+        return mPlayer.isDarkModeActive();
     }
 }

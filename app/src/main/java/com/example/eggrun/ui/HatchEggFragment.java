@@ -2,16 +2,19 @@ package com.example.eggrun.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.eggrun.R;
+import com.example.eggrun.classes.Bus;
 import com.example.eggrun.classes.Player;
 import com.example.eggrun.classes.pet.Pet;
 
@@ -19,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class HatchEggFragment extends Fragment {
     private static final String TAG = "HatchEggFragment";
+    private Bus bus = Bus.getInstance();
     private Pet mPet;
 
     private boolean mIsActive = true;
@@ -35,6 +39,12 @@ public class HatchEggFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_hatch_egg, container, false);
         ImageView imageView = view.findViewById(R.id.pet_image_view);
         imageView.setImageResource(mPet.getImage());
+
+        if (bus.isDarkModeActive()){
+            view.setBackgroundColor(Color.BLACK);
+            TextView text = view.findViewById(R.id.egg_hatch_text_view);
+            text.setTextColor(Color.WHITE);
+        }
         return view;
     }
 

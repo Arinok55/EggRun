@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class Player implements Serializable {
     private final String mName;
     private final String mFileName;
+    private boolean darkMode = false;
     private final Bus bus = Bus.getInstance();
 
     private ArrayList<Egg> mEggList;
@@ -64,5 +65,14 @@ public class Player implements Serializable {
         catch (IOException e){
             return false;
         }
+    }
+
+    public void switchDarkMode(){
+        darkMode = !darkMode;
+        saveData();
+    }
+
+    public boolean isDarkModeActive(){
+        return darkMode;
     }
 }

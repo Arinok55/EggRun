@@ -1,28 +1,26 @@
 package com.example.eggrun.ui;
 
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.eggrun.R;
 import com.example.eggrun.classes.Bus;
-import com.example.eggrun.classes.Player;
 import com.example.eggrun.classes.egg.Egg;
 import com.example.eggrun.classes.egg.EggFactory;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class AddEggFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "AddEggFragment";
@@ -43,6 +41,25 @@ public class AddEggFragment extends Fragment implements View.OnClickListener{
         ImageButton addLegendaryEggButton = view.findViewById(R.id.addLegendaryEggButton);
         addLegendaryEggButton.setOnClickListener(this);
 
+        if (bus.isDarkModeActive()) {
+            view.getRootView().setBackgroundColor(Color.BLACK);
+            ImageView title = view.findViewById(R.id.eggRunTitle);
+            title.setImageResource(R.drawable.egg_run_title_dark);
+
+            addCommonEggButton.setBackgroundColor(Color.BLACK);
+            addUncommonEggButton.setBackgroundColor(Color.BLACK);
+            addRareEggButton.setBackgroundColor(Color.BLACK);
+            addLegendaryEggButton.setBackgroundColor(Color.BLACK);
+
+            TextView text = view.findViewById(R.id.commonEggText);
+            text.setTextColor(Color.WHITE);
+            text = view.findViewById(R.id.uncommonEggText);
+            text.setTextColor(Color.WHITE);
+            text = view.findViewById(R.id.rareEggText);
+            text.setTextColor(Color.WHITE);
+            text = view.findViewById(R.id.legendaryEggText);
+            text.setTextColor(Color.WHITE);
+        }
         return view;
     }
 

@@ -160,16 +160,13 @@ public class RunSessionActivity extends SingleFragmentActivity implements OnMapR
 
                     }
                 }, 2000);
-
                 bindService(new Intent(RunSessionActivity.this,
                                 BackgroundLocationService.class),
                         mServiceConnection,
                         Context.BIND_AUTO_CREATE);
             }
-
             @Override
             public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-
             }
         }).check();
     }
@@ -180,7 +177,6 @@ public class RunSessionActivity extends SingleFragmentActivity implements OnMapR
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
-
     }
 
     @Override
@@ -191,7 +187,6 @@ public class RunSessionActivity extends SingleFragmentActivity implements OnMapR
         }
         Log.d(TAG,"Stopping Run Activity");
         EventBus.getDefault().unregister(this);
-        //EventBus.getDefault().register(this);
         super.onStop();
     }
 
